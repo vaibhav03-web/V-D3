@@ -4,6 +4,34 @@
 
 const screens = [...document.querySelectorAll(".screen")];
 
+/* maps each screen id to a step in the progress dots
+   ("loading" shares the same step as "proposal" since
+   it's just the suspense on the way there) */
+const stepMap = {
+  intro: 0,
+  choice: 1,
+  cards: 2,
+  loading: 3,
+  proposal: 3,
+  success: 4
+};
+
+const dots = [...document.querySelectorAll(".progress-dots .dot")];
+
+function updateDots(id) {
+  const step = stepMap[id] ?? 0;
+
+  dots.forEach((dot, i) => {
+    dot.classList.remove("active", "done");
+
+    if (i < step) {
+      dot.classList.add("done");
+    } else if (i === step) {
+      dot.classList.add("active");
+    }
+  });
+}
+
 function showScreen(id) {
   screens.forEach(screen => {
     screen.classList.remove("active");
@@ -14,6 +42,8 @@ function showScreen(id) {
   if (target) {
     target.classList.add("active");
   }
+
+  updateDots(id);
 
   window.scrollTo({
     top: 0,
@@ -245,14 +275,14 @@ memoryCards.forEach((card, index) => {
 
     /*
       Small surprise:
-      after the third card is opened,
-      reveal a hidden message.
+      once most cards are opened,
+      reveal a hidden bonus message.
     */
 
     const flipped =
       document.querySelectorAll(".memory-card.flipped");
 
-    if (flipped.length === 3) {
+    if (flipped.length === memoryCards.length - 1) {
       unlockSecretMessage();
     }
 
@@ -307,18 +337,8 @@ const loadingSteps = [
   },
 
   {
-    title: "actually...",
-    copy: "I might be panicking a little."
-  },
-
-  {
     title: "taking a breath...",
     copy: "one second. I want to ask this properly."
-  },
-
-  {
-    title: "thinking...",
-    copy: "about how to say this without making it weird."
   },
 
   {
@@ -361,18 +381,13 @@ function startSuspense() {
     document.getElementById("loadingPercent");
 
   /*
-    Deliberately slow:
-    around 20-24 seconds.
-
-    The messages stay visible long enough
-    to actually read.
+    Deliberately unhurried, but not endless:
+    around 12-14 seconds total.
   */
 
   let step = 0;
 
-  let progress = 0;
-
-  const stepDuration = 3000;
+  const stepDuration = 2400;
 
   function showStep() {
 
@@ -488,7 +503,7 @@ function finishSuspense() {
 
     }, 1200);
 
-  }, 2500);
+  }, 2000);
 
 }
 
@@ -508,7 +523,7 @@ const noMessages = [
   "wait... that's not the one I was hoping for 🥹",
 
   "are you sure?",
-  
+
   "I feel like we should reconsider this.",
 
   "you clicked the wrong answer. respectfully.",
@@ -768,6 +783,42 @@ function createMassiveBurst() {
 
 
 /* =========================================================
+   CURSOR HEART TRAIL
+   (a light, occasional trail — not on every pixel moved)
+   ========================================================= */
+
+let lastHeartTime = 0;
+
+document.addEventListener("mousemove", (e) => {
+
+  const now = Date.now();
+
+  if (now - lastHeartTime < 140) {
+    return;
+  }
+
+  lastHeartTime = now;
+
+  const heart =
+    document.createElement("div");
+
+  heart.className = "cursor-heart";
+
+  heart.textContent = "♡";
+
+  heart.style.left = `${e.clientX}px`;
+  heart.style.top = `${e.clientY}px`;
+
+  document.body.appendChild(heart);
+
+  setTimeout(() => {
+    heart.remove();
+  }, 900);
+
+});
+
+
+/* =========================================================
    LITTLE EASTER EGG
    ========================================================= */
 
@@ -835,6 +886,8 @@ if (moon) {
 window.addEventListener(
   "load",
   () => {
+
+    updateDots("intro");
 
     setTimeout(() => {
       createSparkles();
