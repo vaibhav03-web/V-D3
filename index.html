@@ -1,1 +1,163 @@
-<!DOCTYPE html><html><head><link rel='stylesheet' href='style.css'></head><body><h1>Replace with provided index.html content</h1></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For You ❤️</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="hearts"></div>
+
+<div class="container">
+
+    <section id="intro" class="card">
+        <h1>Hey You 🌸</h1>
+
+        <p>I wanted to show you something.</p>
+        <p>It'll only take a minute. Promise.</p>
+
+        <button onclick="startJourney()">Okay 😊</button>
+        <button onclick="startJourney()">I'm curious 👀</button>
+    </section>
+
+    <section id="choiceScreen" class="card hidden">
+
+        <h2>Pick one ✨</h2>
+
+        <div class="choice-grid">
+            <button onclick="showCards()">Something nice</button>
+            <button onclick="showCards()">Tell me more</button>
+            <button onclick="showCards()">Okayyy 😌</button>
+            <button onclick="showCards()">Go on...</button>
+        </div>
+
+    </section>
+
+    <section id="cardsSection" class="hidden">
+
+        <h2 class="title">A few things about you 💕</h2>
+
+        <div class="cards">
+
+            <div class="flip-card">
+                <div class="flip-inner">
+                    <div class="front">✨</div>
+                    <div class="back">
+                        You laugh at things nobody else finds funny.
+                    </div>
+                </div>
+            </div>
+
+            <div class="flip-card">
+                <div class="flip-inner">
+                    <div class="front">🌸</div>
+                    <div class="back">
+                        You somehow make ordinary days feel special.
+                    </div>
+                </div>
+            </div>
+
+            <div class="flip-card">
+                <div class="flip-inner">
+                    <div class="front">☁️</div>
+                    <div class="back">
+                        Talking to you never feels like a chore.
+                    </div>
+                </div>
+            </div>
+
+            <div class="flip-card">
+                <div class="flip-inner">
+                    <div class="front">💫</div>
+                    <div class="back">
+                        You always made me feel something different.
+                    </div>
+                </div>
+            </div>
+
+            <div class="flip-card">
+                <div class="flip-inner">
+                    <div class="front">🌷</div>
+                    <div class="back">
+                        You're kinder than you realize.
+                    </div>
+                </div>
+            </div>
+
+            <div class="flip-card">
+                <div class="flip-inner">
+                    <div class="front">💛</div>
+                    <div class="back">
+                        You make people feel comfortable being themselves.
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <button class="continue-btn" onclick="startLoading()">
+            I want to ask you something...
+        </button>
+
+    </section>
+
+    <section id="loadingScreen" class="card hidden">
+
+        <div class="loader"></div>
+
+        <h2 id="loadingText"></h2>
+
+    </section>
+
+    <section id="proposalScreen" class="card hidden">
+
+        <div class="emoji">🥹💖</div>
+
+        <h1>Okay...</h1>
+
+        <p class="question">
+            Would you be my girlfriend?
+        </p>
+
+        <div class="proposal-buttons">
+
+            <button class="yes-btn" onclick="yesClicked()">
+                Yes ❤️
+            </button>
+
+            <button class="no-btn" id="noBtn">
+                No
+            </button>
+
+        </div>
+
+        <p id="begText"></p>
+
+    </section>
+
+    <section id="successScreen" class="card hidden">
+
+        <h1>💖</h1>
+
+        <h2>You just made me ridiculously happy.</h2>
+
+        <p>
+            I don't know exactly where this story goes,
+            but I'd really love to find out with you.
+        </p>
+
+        <div class="celebrate">
+            🌸 ✨ 💕 🌷 💫 ❤️
+        </div>
+
+    </section>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
