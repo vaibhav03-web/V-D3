@@ -1,104 +1,709 @@
-function startJourney() {
+/* =========================================
+   SCREEN NAVIGATION
+   ========================================= */
 
-document.getElementById("intro").classList.add("hidden");
+const screens = [
+  ...document.querySelectorAll(".screen")
+];
 
-document.getElementById("choiceScreen").classList.remove("hidden");
+
+function showScreen(id){
+
+  screens.forEach(screen => {
+
+    screen.classList.remove("active");
+
+  });
+
+
+  const target =
+    document.getElementById(id);
+
+
+  if(target){
+
+    target.classList.add("active");
+
+  }
+
+
+  window.scrollTo({
+
+    top:0,
+
+    behavior:"smooth"
+
+  });
 
 }
 
-function showCards() {
 
-document.getElementById("choiceScreen").classList.add("hidden");
+/* =========================================
+   OPTIONAL MUSIC
+   =========================================
 
-document.getElementById("cardsSection").classList.remove("hidden");
+   Put this file beside the other files:
+
+   song.mp3
+
+   You do NOT need to change the code.
+
+   The music button automatically appears
+   when the MP3 exists.
+
+   Browsers may block automatic playback,
+   so the first click on the website
+   starts the music.
+   ========================================= */
+
+const music =
+  document.getElementById("bgMusic");
+
+
+const musicToggle =
+  document.getElementById("musicToggle");
+
+
+let musicAvailable = true;
+
+
+music.addEventListener(
+  "error",
+  () => {
+
+    musicAvailable = false;
+
+    musicToggle.classList.add("hidden");
+
+  }
+);
+
+
+music.addEventListener(
+  "canplay",
+  () => {
+
+    if(musicAvailable){
+
+      musicToggle.classList.remove("hidden");
+
+    }
+
+  }
+);
+
+
+function tryStartMusic(){
+
+  if(!musicAvailable){
+    return;
+  }
+
+
+  music.play()
+
+    .then(() => {
+
+      musicToggle.classList.remove(
+        "hidden"
+      );
+
+
+      musicToggle
+        .querySelector(".music-label")
+        .textContent =
+        "music on ♫";
+
+    })
+
+    .catch(() => {
+
+      /*
+        Browser blocked autoplay.
+        The site continues normally.
+      */
+
+    });
 
 }
 
-const loadingMessages = [
 
-"Okay... don't panic...",
-"Trying to look confident...",
-"This suddenly feels very real...",
-"Taking a deep breath...",
-"Just a few more seconds...",
-"Alright... here goes..."
+function toggleMusic(){
+
+  if(!musicAvailable){
+    return;
+  }
+
+
+  if(music.paused){
+
+    music.play()
+
+      .then(() => {
+
+        musicToggle
+          .querySelector(".music-label")
+          .textContent =
+          "music on ♫";
+
+      })
+
+      .catch(() => {});
+
+
+  }else{
+
+    music.pause();
+
+
+    musicToggle
+      .querySelector(".music-label")
+      .textContent =
+      "music off";
+
+  }
+
+}
+
+
+musicToggle.addEventListener(
+  "click",
+  toggleMusic
+);
+
+
+/* =========================================
+   INTRO
+   ========================================= */
+
+document
+  .getElementById("startBtn")
+  .addEventListener(
+    "click",
+    () => {
+
+      tryStartMusic();
+
+      showScreen("choice");
+
+    }
+  );
+
+
+/* =========================================
+   CHOICE / REVEAL
+   ========================================= */
+
+const revealMessages = {
+
+  little:
+    "You probably don't realize how often you make an ordinary moment feel a little better just by being there.",
+
+  secret:
+    "Tiny secret: I have definitely caught myself smiling at my phone because of you. More than once.",
+
+  random:
+    "Random fact: talking to you has an oddly reliable ability to improve my mood.",
+
+  warning:
+    "Small warning: there is a question waiting at the end of this. I have been nervous about it for a while."
+
+};
+
+
+document
+  .querySelectorAll(".choice-card")
+  .forEach(card => {
+
+    card.addEventListener(
+      "click",
+      () => {
+
+        const choice =
+          card.dataset.choice;
+
+
+        document
+          .getElementById("revealText")
+          .textContent =
+          revealMessages[choice];
+
+
+        const revealArea =
+          document.getElementById(
+            "revealArea"
+          );
+
+
+        revealArea.classList.remove(
+          "hidden"
+        );
+
+
+        card.classList.add(
+          "selected"
+        );
+
+
+        setTimeout(() => {
+
+          revealArea.scrollIntoView({
+
+            behavior:"smooth",
+
+            block:"center"
+
+          });
+
+        },80);
+
+      }
+    );
+
+  });
+
+
+document
+  .getElementById("choiceContinue")
+  .addEventListener(
+    "click",
+    () => {
+
+      showScreen("cards");
+
+    }
+  );
+
+
+/* =========================================
+   MEMORY CARDS
+   ========================================= */
+
+document
+  .querySelectorAll(".memory-card")
+  .forEach(card => {
+
+    card.addEventListener(
+      "click",
+      () => {
+
+        card.classList.toggle(
+          "flipped"
+        );
+
+
+        const hint =
+          card.querySelector(
+            ".memory-hint"
+          );
+
+
+        if(
+          card.classList.contains(
+            "flipped"
+          )
+        ){
+
+          hint.textContent =
+            "keep this one";
+
+        }else{
+
+          hint.textContent =
+            "tap to read";
+
+        }
+
+      }
+    );
+
+  });
+
+
+/* =========================================
+   LOADING / COURAGE
+   ========================================= */
+
+const loadingSteps = [
+
+  [
+    "collecting courage...",
+    "this seemed much easier in my head."
+  ],
+
+  [
+    "re-reading everything...",
+    "okay, don't overthink this."
+  ],
+
+  [
+    "panicking a little...",
+    "completely normal. probably."
+  ],
+
+  [
+    "taking a breath...",
+    "you've got this."
+  ],
+
+  [
+    "almost there...",
+    "one last deep breath."
+  ],
+
+  [
+    "okay, here goes...",
+    "no turning back now."
+  ]
 
 ];
 
-function startLoading() {
 
-document.getElementById("cardsSection").classList.add("hidden");
+document
+  .getElementById("askBtn")
+  .addEventListener(
+    "click",
+    () => {
 
-document.getElementById("loadingScreen").classList.remove("hidden");
+      showScreen("loading");
 
-let i = 0;
 
-const text = document.getElementById("loadingText");
+      const title =
+        document.getElementById(
+          "loadingTitle"
+        );
 
-const interval = setInterval(() => {
 
-text.innerText = loadingMessages[i];
+      const copy =
+        document.getElementById(
+          "loadingCopy"
+        );
 
-i++;
 
-if(i >= loadingMessages.length){
+      const percent =
+        document.getElementById(
+          "loadingPercent"
+        );
 
-clearInterval(interval);
 
-setTimeout(() => {
+      const bar =
+        document.getElementById(
+          "progressBar"
+        );
 
-document.getElementById("loadingScreen").classList.add("hidden");
 
-document.getElementById("proposalScreen").classList.remove("hidden");
+      let progress = 0;
 
-},1000);
 
-}
+      const tick =
+        setInterval(
+          () => {
 
-},1200);
+            progress +=
+              Math.floor(
+                Math.random() * 10
+              ) + 8;
 
-}
 
-const noTexts = [
+            if(progress > 100){
 
-"Nooo 🥹",
-"Are you sure? 😭",
-"Try the pink one 👀",
-"Please don't break my tiny heart 💔",
-"I prepared for one answer only 😭",
-"That button looks suspicious"
+              progress = 100;
+
+            }
+
+
+            const messageIndex =
+              Math.min(
+
+                Math.floor(
+                  progress /
+                  (100 / loadingSteps.length)
+                ),
+
+                loadingSteps.length - 1
+
+              );
+
+
+            title.textContent =
+              loadingSteps[
+                messageIndex
+              ][0];
+
+
+            copy.textContent =
+              loadingSteps[
+                messageIndex
+              ][1];
+
+
+            percent.textContent =
+              `${progress}%`;
+
+
+            bar.style.width =
+              `${progress}%`;
+
+
+            if(progress >= 100){
+
+              clearInterval(tick);
+
+
+              setTimeout(
+                () => {
+
+                  showScreen(
+                    "proposal"
+                  );
+
+                },
+                900
+              );
+
+            }
+
+          },
+
+          420
+
+        );
+
+    }
+  );
+
+
+/* =========================================
+   PLAYFUL NO BUTTON
+   ========================================= */
+
+const noBtn =
+  document.getElementById(
+    "noBtn"
+  );
+
+
+const begText =
+  document.getElementById(
+    "begText"
+  );
+
+
+const noMessages = [
+
+  "nooo, I don't think that's the button I meant 🥹",
+
+  "wait wait, maybe try the other one?",
+
+  "are you sure? I'm already nervous 😭",
+
+  "that button is getting suspiciously difficult to click",
+
+  "please don't choose chaos today",
+
+  "I spent so much time making the other button prettier",
+
+  "okay... I can take a hint. maybe. 🥺",
+
+  "one more chance?",
+
+  "the pink one is looking very hopeful right now"
 
 ];
 
-let count = 0;
 
-document.addEventListener("mouseover",function(e){
+let noCount = 0;
 
-if(e.target.id === "noBtn"){
 
-const btn = document.getElementById("noBtn");
+function moveNoButton(){
 
-btn.style.position = "fixed";
+  if(
+    window.innerWidth < 560
+  ){
 
-btn.style.left =
-Math.random() * (window.innerWidth - 150) + "px";
+    noBtn.style.transform =
+      `translateX(${
+        (Math.random() * 120) - 60
+      }px)`;
 
-btn.style.top =
-Math.random() * (window.innerHeight - 100) + "px";
+  }else{
 
-document.getElementById("begText").innerText =
-noTexts[count % noTexts.length];
+    const parent =
+      noBtn.parentElement
+        .getBoundingClientRect();
 
-count++;
+
+    const btnRect =
+      noBtn.getBoundingClientRect();
+
+
+    const maxX =
+      Math.max(
+
+        60,
+
+        parent.width -
+        btnRect.width -
+        20
+
+      );
+
+
+    const x =
+      Math.random() * maxX -
+      maxX / 2;
+
+
+    noBtn.style.transform =
+      `translateX(${x}px)`;
+
+  }
+
+
+  begText.textContent =
+    noMessages[
+      noCount %
+      noMessages.length
+    ];
+
+
+  noCount++;
 
 }
 
-});
 
-function yesClicked(){
+noBtn.addEventListener(
+  "mouseenter",
+  moveNoButton
+);
 
-document.getElementById("proposalScreen").classList.add("hidden");
 
-document.getElementById("successScreen").classList.remove("hidden");
+noBtn.addEventListener(
+  "click",
+  moveNoButton
+);
+
+
+/* =========================================
+   YES BUTTON
+   ========================================= */
+
+document
+  .getElementById("yesBtn")
+  .addEventListener(
+    "click",
+    () => {
+
+      showScreen("success");
+
+      startCelebration();
+
+
+      if(
+        musicAvailable &&
+        music.paused
+      ){
+
+        tryStartMusic();
+
+      }
+
+    }
+  );
+
+
+/* =========================================
+   CONFETTI
+   ========================================= */
+
+function startCelebration(){
+
+  const layer =
+    document.getElementById(
+      "confettiLayer"
+    );
+
+
+  layer.innerHTML = "";
+
+
+  const symbols = [
+
+    "♡",
+    "✦",
+    "✧",
+    "•",
+    "♥",
+    "❀"
+
+  ];
+
+
+  const colors = [
+
+    "#d979a5",
+    "#e4a7c1",
+    "#b58aa7",
+    "#d5b4c9",
+    "#c96d97"
+
+  ];
+
+
+  for(
+    let i = 0;
+    i < 65;
+    i++
+  ){
+
+    const piece =
+      document.createElement(
+        "span"
+      );
+
+
+    piece.className =
+      "confetti";
+
+
+    piece.textContent =
+      symbols[
+        Math.floor(
+          Math.random() *
+          symbols.length
+        )
+      ];
+
+
+    piece.style.left =
+      `${Math.random() * 100}%`;
+
+
+    piece.style.color =
+      colors[
+        Math.floor(
+          Math.random() *
+          colors.length
+        )
+      ];
+
+
+    piece.style.fontSize =
+      `${10 + Math.random() * 15}px`;
+
+
+    piece.style.animationDelay =
+      `${Math.random() * 1.8}s`;
+
+
+    piece.style.animationDuration =
+      `${2.7 + Math.random() * 2}s`;
+
+
+    layer.appendChild(
+      piece
+    );
+
+  }
 
 }
