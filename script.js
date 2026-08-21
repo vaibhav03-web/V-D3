@@ -1,173 +1,148 @@
-/* =====================================================
-   NAVIGATION
-===================================================== */
+/* =========================================================
+   DREAMY PROPOSAL SITE - ENHANCED CONTROLLER
+   ========================================================= */
 
-const screens =
-  [...document.querySelectorAll(".screen")];
+const screens = [...document.querySelectorAll(".screen")];
+const journeyDots = [...document.querySelectorAll(".journey-dots .dot")];
 
-
-function showScreen(id){
-
+function showScreen(id) {
   screens.forEach(screen => {
-
     screen.classList.remove("active");
-
   });
 
+  const target = document.getElementById(id);
 
-  const target =
-    document.getElementById(id);
-
-
-  if(target){
-
+  if (target) {
     target.classList.add("active");
-
   }
 
-
-  window.scrollTo({
-    top:0,
-    behavior:"smooth"
+  // update journey dots
+  const activeIndex = screens.findIndex(s => s.id === id);
+  journeyDots.forEach((dot, i) => {
+    dot.classList.toggle("active", i === activeIndex);
   });
 
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
 
   createSparkles();
-
 }
 
 
-/* =====================================================
+/* =========================================================
    MUSIC
-===================================================== */
+   ========================================================= */
 
-const music =
-  document.getElementById("bgMusic");
-
-const musicToggle =
-  document.getElementById("musicToggle");
+const music = document.getElementById("bgMusic");
+const musicToggle = document.getElementById("musicToggle");
 
 let musicAvailable = true;
 
+if (music) {
+  music.addEventListener("error", () => {
+    musicAvailable = false;
 
-if(music){
-
-  music.addEventListener(
-    "error",
-    () => {
-
-      musicAvailable = false;
-
-      musicToggle.classList.add(
-        "hidden"
-      );
-
+    if (musicToggle) {
+      musicToggle.classList.add("hidden");
     }
-  );
+  });
 
-
-  music.addEventListener(
-    "canplay",
-    () => {
-
-      musicToggle.classList.remove(
-        "hidden"
-      );
-
+  music.addEventListener("canplay", () => {
+    if (musicAvailable && musicToggle) {
+      musicToggle.classList.remove("hidden");
     }
-  );
-
+  });
 }
 
+function tryStartMusic() {
+  if (!musicAvailable || !music) return;
 
-function startMusic(){
-
-  if(
-    !musicAvailable ||
-    !music
-  ){
-    return;
-  }
-
-
-  music.volume = .32;
-
+  music.volume = 0.35;
 
   music.play()
     .then(() => {
+      if (musicToggle) {
+        musicToggle.classList.remove("hidden");
 
-      musicToggle
-        .querySelector(".music-label")
-        .textContent =
-        "music on ♫";
+        const label =
+          musicToggle.querySelector(".music-label");
 
+        if (label) {
+          label.textContent = "music on ♫";
+        }
+      }
     })
     .catch(() => {});
+}
+
+if (musicToggle) {
+  musicToggle.addEventListener("click", () => {
+
+    if (!musicAvailable || !music) return;
+
+    if (music.paused) {
+
+      music.play()
+        .then(() => {
+
+          const label =
+            musicToggle.querySelector(".music-label");
+
+          if (label) {
+            label.textContent = "music on ♫";
+          }
+
+        })
+        .catch(() => {});
+
+    } else {
+
+      music.pause();
+
+      const label =
+        musicToggle.querySelector(".music-label");
+
+      if (label) {
+        label.textContent = "music off";
+      }
+
+    }
+
+  });
+}
+
+
+/* =========================================================
+   INTRO
+   ========================================================= */
+
+const startBtn =
+  document.getElementById("startBtn");
+
+if (startBtn) {
+
+  startBtn.addEventListener("click", () => {
+
+    tryStartMusic();
+
+    createBurst();
+
+    setTimeout(() => {
+      showScreen("choice");
+    }, 250);
+
+  });
 
 }
 
 
-musicToggle.addEventListener(
-  "click",
-  () => {
+/* =========================================================
+   CHOICE SCREEN
+   ========================================================= */
 
-    if(
-      !musicAvailable ||
-      !music
-    ){
-      return;
-    }
-
-
-    if(music.paused){
-
-      startMusic();
-
-    }else{
-
-      music.pause();
-
-      musicToggle
-        .querySelector(".music-label")
-        .textContent =
-        "song";
-
-    }
-
-  }
-);
-
-
-/* =====================================================
-   INTRO
-===================================================== */
-
-document
-  .getElementById("startBtn")
-  .addEventListener(
-    "click",
-    () => {
-
-      startMusic();
-
-      createBurst();
-
-      setTimeout(
-        () => {
-          showScreen("choice");
-        },
-        250
-      );
-
-    }
-  );
-
-
-/* =====================================================
-   CHOICE DOORS
-===================================================== */
-
-const messages = {
+const revealMessages = {
 
   little:
     "You probably don't realize how often you make an ordinary moment feel a little better just by being there.",
@@ -183,494 +158,470 @@ const messages = {
 
 };
 
+const choiceCards =
+  document.querySelectorAll(".choice-card");
 
-const doors =
-  document.querySelectorAll(".door");
+choiceCards.forEach(card => {
 
+  card.addEventListener("click", () => {
 
-doors.forEach(door => {
+    const choice = card.dataset.choice;
 
-  door.addEventListener(
-    "click",
-    () => {
+    choiceCards.forEach(c => {
+      c.classList.remove("selected");
+    });
 
-      doors.forEach(d => {
-        d.classList.remove("chosen");
-      });
+    card.classList.add("selected");
 
+    const revealArea =
+      document.getElementById("revealArea");
 
-      door.classList.add(
-        "chosen"
-      );
+    const revealText =
+      document.getElementById("revealText");
 
+    if (revealText) {
+      revealText.textContent =
+        revealMessages[choice];
+    }
 
-      document
-        .getElementById("letterText")
-        .textContent =
-        messages[
-          door.dataset.choice
-        ];
+    if (revealArea) {
 
+      revealArea.classList.remove("hidden");
 
-      const wrap =
-        document.getElementById(
-          "letterWrap"
-        );
+      revealArea.classList.add("revealing");
 
+      setTimeout(() => {
 
-      wrap.classList.remove(
-        "hidden"
-      );
+        revealArea.scrollIntoView({
+          behavior: "smooth",
+          block: "center"
+        });
 
-
-      createBurst();
-
-
-      setTimeout(
-        () => {
-
-          wrap.scrollIntoView({
-            behavior:"smooth",
-            block:"center"
-          });
-
-        },
-        100
-      );
+      }, 150);
 
     }
-  );
+
+    createBurst();
+
+  });
 
 });
 
 
-document
-  .getElementById("choiceContinue")
-  .addEventListener(
-    "click",
-    () => {
+const choiceContinue =
+  document.getElementById("choiceContinue");
 
-      showScreen("cards");
+if (choiceContinue) {
 
-    }
-  );
+  choiceContinue.addEventListener("click", () => {
 
+    showScreen("cards");
 
-/* =====================================================
-   REAL CARD REVEALS
-===================================================== */
+  });
 
-const cards =
-  document.querySelectorAll(
-    ".collectible"
-  );
+}
 
 
-let openedCards = 0;
+/* =========================================================
+   MEMORY CARDS - FLIP & TRACK
+   ========================================================= */
 
+const memoryCards =
+  document.querySelectorAll(".memory-card");
 
-cards.forEach(card => {
+const openedCards = new Set();
+const totalCards = memoryCards.length;
+let hintTimer = null;
 
-  card.addEventListener(
-    "click",
-    () => {
+const cardProgressFill =
+  document.getElementById("cardProgressFill");
 
-      /*
-        IMPORTANT:
-        We are not using a CSS flip anymore.
+const cardProgressLabel =
+  document.getElementById("cardProgressLabel");
 
-        The card starts with ONLY the
-        front design.
+const cardHintText =
+  document.getElementById("cardHintText");
 
-        Once clicked, JavaScript replaces
-        the content with the hidden
-        compliment.
+const askBtn =
+  document.getElementById("askBtn");
 
-        That eliminates the previous
-        "both sides are visible" glitch.
-      */
+const allCardsOpened =
+  document.getElementById("allCardsOpened");
 
-      if(
-        card.classList.contains(
-          "opened"
-        )
-      ){
+function updateCardProgress() {
+  const count = openedCards.size;
 
-        return;
+  if (cardProgressFill) {
+    cardProgressFill.style.width =
+      `${(count / totalCards) * 100}%`;
+  }
 
-      }
+  if (cardProgressLabel) {
+    cardProgressLabel.textContent =
+      `${count} / ${totalCards} opened`;
+  }
 
+  if (cardHintText) {
+    cardHintText.classList.remove("visible");
+  }
 
-      const message =
-        card.dataset.message;
+  if (count === totalCards) {
+    revealAskButton();
+  }
+}
 
+function revealAskButton() {
+  if (askBtn) {
+    askBtn.classList.remove("hidden");
+    askBtn.classList.add("pulse-ready");
+  }
 
-      const cover =
-        card.querySelector(
-          ".collectible-cover"
-        );
+  if (allCardsOpened) {
+    allCardsOpened.classList.remove("hidden");
+  }
 
+  createMassiveBurst();
 
-      cover.innerHTML = `
+  // extra celebration
+  setTimeout(() => {
+    createBurst();
+  }, 500);
+}
 
-        <span class="card-num">
-          opened
-        </span>
+memoryCards.forEach((card, index) => {
 
-        <span class="card-star">
-          ♡
-        </span>
+  card.addEventListener("click", () => {
 
-        <strong>
-          ${message}
-        </strong>
+    const isFlipped = card.classList.contains("flipped");
 
-        <small>
-          keep this one
-        </small>
-
-      `;
-
-
-      card.classList.add(
-        "opened"
+    if (isFlipped) {
+      // gently wiggle if already flipped
+      card.animate(
+        [
+          { transform: "rotate(0deg)" },
+          { transform: "rotate(-2deg)" },
+          { transform: "rotate(2deg)" },
+          { transform: "rotate(0deg)" }
+        ],
+        { duration: 300, easing: "ease-in-out" }
       );
-
-
-      openedCards++;
-
-
-      document
-        .querySelector(
-          ".progress-count"
-        )
-        .textContent =
-        openedCards;
-
-
-      createBurst();
-
-
-      if(openedCards === 6){
-
-        setTimeout(
-          () => {
-
-            const hidden =
-              document.getElementById(
-                "hiddenMessage"
-              );
-
-
-            hidden.classList.remove(
-              "hidden"
-            );
-
-
-            setTimeout(
-              () => {
-
-                hidden.classList.add(
-                  "revealed"
-                );
-
-              },
-              80
-            );
-
-
-            createMassiveBurst();
-
-          },
-          500
-        );
-
-      }
-
+      return;
     }
-  );
+
+    // flip open
+    card.classList.add("flipped");
+    card.setAttribute("aria-pressed", "true");
+
+    // track
+    openedCards.add(index);
+    updateCardProgress();
+
+    // sparkle burst at card location
+    createCardBurst(card);
+
+  });
 
 });
 
+// hint appears after 3 seconds if no cards opened
+if (cardHintText) {
+  hintTimer = setTimeout(() => {
+    if (openedCards.size === 0) {
+      cardHintText.classList.add("visible");
+    }
+  }, 3000);
+}
 
-/* =====================================================
-   SUSPENSE
-===================================================== */
+// cancel timer if a card is opened
+memoryCards.forEach(card => {
+  card.addEventListener("click", () => {
+    if (hintTimer) {
+      clearTimeout(hintTimer);
+      hintTimer = null;
+    }
+  });
+});
+
+
+/* =========================================================
+   LOADING / SUSPENSE
+   ========================================================= */
 
 const loadingSteps = [
 
   {
-    title:
-      "okay...",
-    copy:
-      "this suddenly feels a little more real."
+    title: "okay...",
+    copy: "this suddenly feels a little more real."
   },
 
   {
-    title:
-      "don't panic.",
-    copy:
-      "I'm definitely not panicking."
+    title: "don't panic.",
+    copy: "I'm definitely not panicking."
   },
 
   {
-    title:
-      "actually...",
-    copy:
-      "I might be panicking a little."
+    title: "actually...",
+    copy: "I might be panicking a little."
   },
 
   {
-    title:
-      "one second.",
-    copy:
-      "I want to ask this properly."
+    title: "taking a breath...",
+    copy: "one second. I want to ask this properly."
   },
 
   {
-    title:
-      "thinking...",
-    copy:
-      "about how to say this without making it weird."
+    title: "thinking...",
+    copy: "about how to say this without making it weird."
   },
 
   {
-    title:
-      "almost there...",
-    copy:
-      "okay. deep breath."
+    title: "almost there...",
+    copy: "please be patient with my nervousness."
   },
 
   {
-    title:
-      "right.",
-    copy:
-      "I think I'm ready."
+    title: "okay.",
+    copy: "I think I'm ready."
   }
 
 ];
 
 
-document
-  .getElementById("askBtn")
-  .addEventListener(
-    "click",
-    startSuspense
-  );
+if (askBtn) {
+
+  askBtn.addEventListener("click", startSuspense);
+
+}
 
 
-function startSuspense(){
+function startSuspense() {
 
   showScreen("loading");
 
-
   const title =
-    document.getElementById(
-      "loadingTitle"
-    );
+    document.getElementById("loadingTitle");
 
   const copy =
-    document.getElementById(
-      "loadingCopy"
-    );
+    document.getElementById("loadingCopy");
 
   const bar =
-    document.getElementById(
-      "progressBar"
-    );
+    document.getElementById("progressBar");
 
   const percent =
-    document.getElementById(
-      "loadingPercent"
-    );
+    document.getElementById("loadingPercent");
 
+  /*
+    Deliberately slow:
+    around 20-24 seconds.
+
+    The messages stay visible long enough
+    to actually read.
+  */
 
   let step = 0;
 
+  const stepDuration = 3000;
 
-  function nextStep(){
+  function showStep() {
 
-    if(
-      step >=
-      loadingSteps.length
-    ){
+    if (step >= loadingSteps.length) {
 
       finishSuspense();
 
       return;
-
     }
-
 
     const current =
       loadingSteps[step];
 
+    if (title) {
+      title.style.opacity = "0";
+    }
 
-    title.style.opacity =
-      "0";
+    if (copy) {
+      copy.style.opacity = "0";
+    }
 
-    copy.style.opacity =
-      "0";
+    setTimeout(() => {
 
-
-    setTimeout(
-      () => {
-
+      if (title) {
         title.textContent =
           current.title;
 
+        title.style.opacity = "1";
+      }
+
+      if (copy) {
         copy.textContent =
           current.copy;
 
+        copy.style.opacity = "1";
+      }
 
-        title.style.opacity =
-          "1";
+    }, 250);
 
-        copy.style.opacity =
-          "1";
-
-      },
-      300
-    );
-
-
-    const progress =
+    const nextProgress =
       Math.round(
-
         ((step + 1) /
-          loadingSteps.length)
-        * 94
-
+          loadingSteps.length) *
+          94
       );
 
+    if (bar) {
+      bar.style.width =
+        `${nextProgress}%`;
+    }
 
-    bar.style.width =
-      `${progress}%`;
-
-
-    percent.textContent =
-      `${progress}%`;
-
+    if (percent) {
+      percent.textContent =
+        `${nextProgress}%`;
+    }
 
     createTinySparkle();
 
-
     step++;
 
-
-    /*
-      3.6 seconds per message.
-      Roughly 28 seconds total.
-    */
-
-    setTimeout(
-      nextStep,
-      3600
-    );
+    setTimeout(showStep, stepDuration);
 
   }
 
-
-  nextStep();
+  showStep();
 
 }
 
 
-function finishSuspense(){
+function finishSuspense() {
 
   const title =
-    document.getElementById(
-      "loadingTitle"
-    );
+    document.getElementById("loadingTitle");
 
   const copy =
-    document.getElementById(
-      "loadingCopy"
-    );
+    document.getElementById("loadingCopy");
 
   const bar =
-    document.getElementById(
-      "progressBar"
-    );
+    document.getElementById("progressBar");
 
   const percent =
-    document.getElementById(
-      "loadingPercent"
-    );
+    document.getElementById("loadingPercent");
 
+  if (title) {
+    title.textContent = "one last thing...";
+  }
 
-  title.textContent =
-    "one last thing...";
+  if (copy) {
+    copy.textContent =
+      "okay. here we go.";
+  }
 
+  if (bar) {
+    bar.style.width = "100%";
+  }
 
-  copy.textContent =
-    "okay. here we go.";
-
-
-  bar.style.width =
-    "100%";
-
-
-  percent.textContent =
-    "100%";
-
+  if (percent) {
+    percent.textContent = "100%";
+  }
 
   /*
-    Long final pause.
+    Hold the final suspense
+    before showing the question.
   */
 
-  setTimeout(
-    () => {
+  setTimeout(() => {
 
-      createMassiveBurst();
+    createMassiveBurst();
 
+    setTimeout(() => {
 
-      setTimeout(
-        () => {
+      showScreen("proposal");
+      startTypingQuestion();
 
-          showScreen(
-            "proposal"
-          );
+    }, 1200);
 
-        },
-        1400
-      );
-
-    },
-    3200
-  );
+  }, 2500);
 
 }
 
 
-/* =====================================================
-   NO BUTTON
-===================================================== */
+/* =========================================================
+   TYPING EFFECT FOR PROPOSAL QUESTION
+   ========================================================= */
+
+const questionText = "Will you be my girlfriend?";
+
+function startTypingQuestion() {
+
+  const questionEl =
+    document.getElementById("proposalQuestion");
+
+  if (!questionEl) return;
+
+  questionEl.textContent = "";
+  questionEl.classList.add("typing");
+
+  let charIndex = 0;
+
+  function typeNextChar() {
+
+    if (charIndex < questionText.length) {
+
+      questionEl.textContent +=
+        questionText[charIndex];
+
+      charIndex++;
+
+      // add a tiny sparkle every few characters
+      if (charIndex % 5 === 0) {
+        createTinySparkle();
+      }
+
+      setTimeout(typeNextChar, 90);
+
+    } else {
+
+      // typing complete
+      questionEl.classList.remove("typing");
+
+      // add blinking cursor for a moment
+      const cursor = document.createElement("span");
+      cursor.className = "cursor";
+      questionEl.appendChild(cursor);
+
+      setTimeout(() => {
+        cursor.remove();
+      }, 3000);
+
+    }
+
+  }
+
+  setTimeout(typeNextChar, 400);
+
+}
+
+
+/* =========================================================
+   PROPOSAL
+   ========================================================= */
 
 const noBtn =
-  document.getElementById(
-    "noBtn"
-  );
+  document.getElementById("noBtn");
 
 const begText =
-  document.getElementById(
-    "begText"
-  );
-
+  document.getElementById("begText");
 
 const noMessages = [
 
   "wait... that's not the one I was hoping for 🥹",
 
   "are you sure?",
-
+  
   "I feel like we should reconsider this.",
 
   "you clicked the wrong answer. respectfully.",
 
   "okay okay... one more try?",
 
-  "that button is suspiciously difficult to catch.",
+  "that button is suspiciously hard to catch.",
 
   "I'm choosing to believe that was an accident.",
 
@@ -680,143 +631,141 @@ const noMessages = [
 
 ];
 
-
 let noCount = 0;
 
+if (noBtn) {
 
-function dodgeNo(){
+  noBtn.addEventListener(
+    "mouseenter",
+    dodgeNoButton
+  );
+
+  noBtn.addEventListener(
+    "click",
+    dodgeNoButton
+  );
+
+}
+
+
+function dodgeNoButton() {
 
   noCount++;
 
+  if (begText) {
 
-  begText.textContent =
-    noMessages[
-      (noCount - 1) %
-      noMessages.length
-    ];
-
-
-  let x;
-  let y;
-
-
-  if(
-    window.innerWidth < 600
-  ){
-
-    x =
-      Math.random() * 130 - 65;
-
-    y =
-      Math.random() * 90 - 45;
+    begText.textContent =
+      noMessages[
+        (noCount - 1) %
+        noMessages.length
+      ];
 
   }
 
-  else{
+  // make the no button slightly smaller each time
+  const scale = Math.max(0.6, 1 - noCount * 0.04);
+  noBtn.style.transform = `scale(${scale})`;
 
-    x =
-      Math.random() * 300 - 150;
+  if (window.innerWidth < 600) {
 
-    y =
-      Math.random() * 130 - 65;
+    const x =
+      (Math.random() * 100) - 50;
+
+    const y =
+      (Math.random() * 70) - 35;
+
+    noBtn.style.marginLeft = `${x}px`;
+    noBtn.style.marginTop = `${y}px`;
+
+  } else {
+
+    const x =
+      (Math.random() * 240) - 120;
+
+    const y =
+      (Math.random() * 100) - 50;
+
+    noBtn.style.transform =
+      `translate(${x}px, ${y}px) scale(${scale})`;
 
   }
-
-
-  noBtn.style.transform =
-    `translate(${x}px,${y}px)`;
-
 
   createTinySparkle();
 
 }
 
 
-noBtn.addEventListener(
-  "mouseenter",
-  dodgeNo
-);
-
-
-noBtn.addEventListener(
-  "click",
-  dodgeNo
-);
-
-
-/* =====================================================
+/* =========================================================
    YES
-===================================================== */
+   ========================================================= */
 
-document
-  .getElementById("yesBtn")
-  .addEventListener(
-    "click",
-    () => {
+const yesBtn =
+  document.getElementById("yesBtn");
 
-      startMusic();
+if (yesBtn) {
 
-      showScreen("success");
+  yesBtn.addEventListener("click", () => {
 
-      createMassiveBurst();
+    tryStartMusic();
 
-      celebrate();
+    createMassiveBurst();
 
-    }
-  );
+    showScreen("success");
+
+    startCelebration();
+
+  });
+
+}
 
 
-/* =====================================================
+/* =========================================================
    CELEBRATION
-===================================================== */
+   ========================================================= */
 
-function celebrate(){
+function startCelebration() {
 
   const layer =
     document.getElementById(
       "confettiLayer"
     );
 
+  if (!layer) {
+    return;
+  }
 
   layer.innerHTML = "";
 
-
   const symbols = [
     "♡",
+    "♥",
     "✦",
     "✧",
     "❀",
-    "♥",
     "·"
   ];
 
-
   const colors = [
-    "#d979a1",
-    "#9785bb",
-    "#84a5be",
-    "#c8a269",
-    "#ca789b"
+    "#d979a5",
+    "#e4a7c1",
+    "#b58aa7",
+    "#d5b4c9",
+    "#c96d97"
   ];
 
-
-  for(
+  for (
     let i = 0;
     i < 100;
     i++
-  ){
+  ) {
 
-    const item =
-      document.createElement(
-        "span"
-      );
+    const piece =
+      document.createElement("span");
 
-
-    item.className =
+    piece.className =
       "confetti";
 
-
-    item.textContent =
+    piece.textContent =
       symbols[
         Math.floor(
           Math.random() *
@@ -824,12 +773,10 @@ function celebrate(){
         )
       ];
 
-
-    item.style.left =
+    piece.style.left =
       `${Math.random() * 100}%`;
 
-
-    item.style.color =
+    piece.style.color =
       colors[
         Math.floor(
           Math.random() *
@@ -837,234 +784,234 @@ function celebrate(){
         )
       ];
 
+    piece.style.fontSize =
+      `${10 + Math.random() * 18}px`;
 
-    item.style.fontSize =
-      `${10 + Math.random() * 17}px`;
+    piece.style.animationDelay =
+      `${Math.random() * 1.7}s`;
 
-
-    item.style.animationDelay =
-      `${Math.random() * 1.5}s`;
-
-
-    item.style.animationDuration =
+    piece.style.animationDuration =
       `${3 + Math.random() * 2.5}s`;
 
+    layer.appendChild(piece);
 
-    layer.appendChild(
-      item
-    );
+  }
 
+  // extra floating hearts during celebration
+  for (let i = 0; i < 8; i++) {
+    setTimeout(() => {
+      createFloatingHeart();
+    }, i * 400);
   }
 
 }
 
 
-/* =====================================================
-   SPARKLES
-===================================================== */
+/* =========================================================
+   PARTICLES / SPARKLES
+   ========================================================= */
 
-function createTinySparkle(){
+function createSparkles() {
+
+  for (let i = 0; i < 5; i++) {
+    createTinySparkle();
+  }
+
+}
+
+
+function createTinySparkle() {
 
   const sparkle =
-    document.createElement(
-      "div"
-    );
-
+    document.createElement("div");
 
   sparkle.className =
     "floating-sparkle";
 
-
   sparkle.textContent =
-    Math.random() > .5
+    Math.random() > 0.5
       ? "✦"
       : "♡";
-
 
   sparkle.style.left =
     `${20 + Math.random() * 60}%`;
 
-
   sparkle.style.top =
-    `${20 + Math.random() * 60}%`;
+    `${25 + Math.random() * 50}%`;
 
+  sparkle.style.animationDuration =
+    `${2 + Math.random() * 2}s`;
 
   document.body.appendChild(
     sparkle
   );
 
+  setTimeout(() => {
+    sparkle.remove();
+  }, 4000);
 
-  setTimeout(
-    () => {
+}
 
+function createCardBurst(card) {
+
+  const rect = card.getBoundingClientRect();
+  const centerX = rect.left + rect.width / 2;
+  const centerY = rect.top + rect.height / 2;
+
+  for (let i = 0; i < 8; i++) {
+
+    const sparkle =
+      document.createElement("div");
+
+    sparkle.className =
+      "floating-sparkle";
+
+    sparkle.textContent =
+      ["✦", "♡", "✧", "❀"][i % 4];
+
+    sparkle.style.left = `${centerX + (Math.random() * 80 - 40)}px`;
+    sparkle.style.top = `${centerY + (Math.random() * 80 - 40)}px`;
+
+    sparkle.style.animationDuration =
+      `${1.5 + Math.random() * 1.5}s`;
+
+    document.body.appendChild(sparkle);
+
+    setTimeout(() => {
       sparkle.remove();
+    }, 3000);
 
-    },
-    2800
-  );
+  }
 
 }
 
+function createBurst() {
 
-function createSparkles(){
+  for (let i = 0; i < 12; i++) {
 
-  for(
-    let i = 0;
-    i < 5;
-    i++
-  ){
+    setTimeout(() => {
 
-    setTimeout(
-      createTinySparkle,
-      i * 100
-    );
+      createTinySparkle();
+
+    }, i * 35);
 
   }
 
 }
 
 
-function createBurst(){
+function createMassiveBurst() {
 
-  for(
-    let i = 0;
-    i < 10;
-    i++
-  ){
+  for (let i = 0; i < 50; i++) {
 
-    setTimeout(
-      createTinySparkle,
-      i * 35
-    );
+    setTimeout(() => {
+
+      createTinySparkle();
+
+    }, i * 30);
 
   }
 
 }
 
 
-function createMassiveBurst(){
+/* =========================================================
+   FLOATING HEARTS (background)
+   ========================================================= */
 
-  for(
-    let i = 0;
-    i < 45;
-    i++
-  ){
+function createFloatingHeart() {
 
-    setTimeout(
-      createTinySparkle,
-      i * 27
-    );
+  const container =
+    document.getElementById("floatingHearts");
 
-  }
+  if (!container) return;
+
+  const heart =
+    document.createElement("span");
+
+  heart.className = "floating-heart";
+
+  heart.textContent =
+    ["♡", "♥", "♡", "❀"][Math.floor(Math.random() * 4)];
+
+  heart.style.left = `${Math.random() * 95}%`;
+
+  heart.style.fontSize = `${14 + Math.random() * 22}px`;
+
+  heart.style.animationDuration = `${6 + Math.random() * 8}s`;
+
+  container.appendChild(heart);
+
+  setTimeout(() => {
+    heart.remove();
+  }, 15000);
 
 }
 
+// spawn floating hearts periodically
+setInterval(() => {
+  if (Math.random() > 0.5) {
+    createFloatingHeart();
+  }
+}, 2000);
 
-/* =====================================================
-   SECRET MOON
-===================================================== */
+
+/* =========================================================
+   LITTLE EASTER EGG
+   ========================================================= */
+
+/*
+   Click the moon three times.
+*/
 
 const moon =
   document.querySelector(".moon");
 
 let moonClicks = 0;
 
+if (moon) {
 
-moon.addEventListener(
-  "click",
-  () => {
+  moon.addEventListener("click", () => {
 
     moonClicks++;
 
+    if (moonClicks === 3) {
 
-    if(
-      moonClicks !== 3
-    ){
-      return;
-    }
+      moonClicks = 0;
 
+      const note =
+        document.createElement("div");
 
-    moonClicks = 0;
+      note.className =
+        "moon-secret";
 
+      note.innerHTML = `
+        <span>you found the secret 🌙</span>
+        <strong>okay, you're cute too.</strong>
+      `;
 
-    const secret =
-      document.createElement(
-        "div"
+      document.body.appendChild(
+        note
       );
 
+      setTimeout(() => {
+        note.classList.add("show");
+      }, 50);
 
-    secret.className =
-      "moon-secret";
+      createMassiveBurst();
 
+      setTimeout(() => {
 
-    secret.innerHTML = `
+        note.classList.remove("show");
 
-      <span>
-        you found the moon secret 🌙
-      </span>
+        setTimeout(() => {
+          note.remove();
+        }, 500);
 
-      <strong>
-        okay, you're cute too.
-      </strong>
+      }, 3500);
 
-    `;
+    }
 
+  });
 
-    document.body.appendChild(
-      secret
-    );
-
-
-    setTimeout(
-      () => {
-
-        secret.classList.add(
-          "show"
-        );
-
-      },
-      60
-    );
-
-
-    createMassiveBurst();
-
-
-    setTimeout(
-      () => {
-
-        secret.classList.remove(
-          "show"
-        );
-
-
-        setTimeout(
-          () => {
-            secret.remove();
-          },
-          500
-        );
-
-      },
-      3500
-    );
-
-  }
-);
-
-
-/* =====================================================
-   STARTUP
-===================================================== */
-
-window.addEventListener(
-  "load",
-  () => {
-
-    setTimeout(
-      createSparkles,
-      500
-    );
-
-  }
-);
+}
