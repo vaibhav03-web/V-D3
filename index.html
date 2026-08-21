@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#fff7fb" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>A Little Something For You ✨</title>
 
@@ -13,23 +12,23 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap"
     rel="stylesheet"
-  />
+  >
 
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
+  <!-- dreamy background -->
   <div class="ambient"></div>
   <div class="stars"></div>
   <div class="petals"></div>
 
-  <!-- Music control -->
+  <!-- music -->
   <button
     id="musicToggle"
     class="music-toggle hidden"
     type="button"
-    aria-label="Play music"
   >
     <span class="music-icon">♫</span>
     <span class="music-label">play a little song</span>
@@ -37,15 +36,22 @@
 
   <main class="app">
 
-    <!-- ================= INTRO ================= -->
+    <!-- ======================================
+         INTRO
+    ======================================= -->
 
-    <section class="screen active" id="intro">
+    <section
+      class="screen active"
+      id="intro"
+    >
 
       <div class="eyebrow">
         a tiny corner of the internet
       </div>
 
-      <div class="moon">☾</div>
+      <div class="moon">
+        ☾
+      </div>
 
       <h1 class="hero-title">
         Hey, you.
@@ -57,7 +63,11 @@
         Just a few things I've been wanting to say.
       </p>
 
-      <button class="primary-btn" id="startBtn" type="button">
+      <button
+        class="primary-btn"
+        id="startBtn"
+        type="button"
+      >
         <span>okay, show me</span>
         <span class="arrow">→</span>
       </button>
@@ -69,9 +79,14 @@
     </section>
 
 
-    <!-- ================= CHOICE ================= -->
+    <!-- ======================================
+         CHOICE
+    ======================================= -->
 
-    <section class="screen" id="choice">
+    <section
+      class="screen"
+      id="choice"
+    >
 
       <div class="eyebrow">
         you get to choose
@@ -85,6 +100,7 @@
         Pick whichever one feels most like you.
       </p>
 
+
       <div class="choice-grid">
 
         <button
@@ -92,7 +108,10 @@
           type="button"
           data-choice="little"
         >
-          <span class="choice-icon">✦</span>
+
+          <span class="choice-icon">
+            ✦
+          </span>
 
           <span class="choice-title">
             something little
@@ -101,6 +120,7 @@
           <span class="choice-sub">
             open this one first
           </span>
+
         </button>
 
 
@@ -109,7 +129,10 @@
           type="button"
           data-choice="secret"
         >
-          <span class="choice-icon">♡</span>
+
+          <span class="choice-icon">
+            ♡
+          </span>
 
           <span class="choice-title">
             a tiny secret
@@ -118,6 +141,7 @@
           <span class="choice-sub">
             okay, maybe not so tiny
           </span>
+
         </button>
 
 
@@ -126,7 +150,10 @@
           type="button"
           data-choice="random"
         >
-          <span class="choice-icon">☁</span>
+
+          <span class="choice-icon">
+            ☁
+          </span>
 
           <span class="choice-title">
             something random
@@ -135,6 +162,7 @@
           <span class="choice-sub">
             because why not
           </span>
+
         </button>
 
 
@@ -143,7 +171,10 @@
           type="button"
           data-choice="warning"
         >
-          <span class="choice-icon">!</span>
+
+          <span class="choice-icon">
+            !
+          </span>
 
           <span class="choice-title">
             a small warning
@@ -152,6 +183,7 @@
           <span class="choice-sub">
             proceed anyway
           </span>
+
         </button>
 
       </div>
@@ -162,21 +194,26 @@
         id="revealArea"
       >
 
-        <div class="envelope opened">
+        <div class="envelope">
 
           <div class="envelope-paper">
+
             <p id="revealText"></p>
+
           </div>
 
         </div>
+
 
         <button
           class="text-btn"
           id="choiceContinue"
           type="button"
         >
+
           okay, one more thing
           <span>→</span>
+
         </button>
 
       </div>
@@ -184,9 +221,14 @@
     </section>
 
 
-    <!-- ================= MEMORY CARDS ================= -->
+    <!-- ======================================
+         MEMORY CARDS
+    ======================================= -->
 
-    <section class="screen" id="cards">
+    <section
+      class="screen"
+      id="cards"
+    >
 
       <div class="eyebrow">
         things i've noticed
@@ -203,7 +245,10 @@
 
       <div class="memory-grid">
 
-        <button class="memory-card" type="button">
+        <button
+          class="memory-card"
+          type="button"
+        >
 
           <span class="memory-number">
             01
@@ -224,7 +269,10 @@
         </button>
 
 
-        <button class="memory-card" type="button">
+        <button
+          class="memory-card"
+          type="button"
+        >
 
           <span class="memory-number">
             02
@@ -245,7 +293,10 @@
         </button>
 
 
-        <button class="memory-card" type="button">
+        <button
+          class="memory-card"
+          type="button"
+        >
 
           <span class="memory-number">
             03
@@ -266,7 +317,10 @@
         </button>
 
 
-        <button class="memory-card" type="button">
+        <button
+          class="memory-card"
+          type="button"
+        >
 
           <span class="memory-number">
             04
@@ -287,7 +341,10 @@
         </button>
 
 
-        <button class="memory-card" type="button">
+        <button
+          class="memory-card"
+          type="button"
+        >
 
           <span class="memory-number">
             05
@@ -308,7 +365,10 @@
         </button>
 
 
-        <button class="memory-card" type="button">
+        <button
+          class="memory-card"
+          type="button"
+        >
 
           <span class="memory-number">
             06
@@ -350,9 +410,14 @@
     </section>
 
 
-    <!-- ================= LOADING ================= -->
+    <!-- ======================================
+         LOADING / SUSPENSE
+    ======================================= -->
 
-    <section class="screen" id="loading">
+    <section
+      class="screen"
+      id="loading"
+    >
 
       <div class="loading-orbit">
 
@@ -408,7 +473,9 @@
     </section>
 
 
-    <!-- ================= PROPOSAL ================= -->
+    <!-- ======================================
+         PROPOSAL
+    ======================================= -->
 
     <section
       class="screen proposal-screen"
@@ -477,7 +544,9 @@
     </section>
 
 
-    <!-- ================= SUCCESS ================= -->
+    <!-- ======================================
+         SUCCESS
+    ======================================= -->
 
     <section
       class="screen success-screen"
@@ -542,16 +611,9 @@
   </main>
 
 
-  <!--
-    OPTIONAL MUSIC
-
-    Just upload a file called:
-
-    song.mp3
-
-    beside these three files.
-
-    No code changes are necessary.
+  <!-- OPTIONAL MUSIC
+       Just upload song.mp3
+       next to these files.
   -->
 
   <audio
@@ -559,10 +621,12 @@
     loop
     preload="none"
   >
+
     <source
       src="song.mp3"
       type="audio/mpeg"
     >
+
   </audio>
 
 
