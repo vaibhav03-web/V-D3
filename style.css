@@ -1,5 +1,5 @@
 /* =========================================================
-   DREAMY PROPOSAL SITE - ENHANCED
+   DREAMY PROPOSAL SITE - FINAL ENHANCED
    ========================================================= */
 
 :root{
@@ -949,50 +949,49 @@ button:focus-visible{
 
 
 /* =========================
-   MEMORY CARDS (FLIP CARDS)
+   MEMORY CARDS (SIMPLE CROSSFADE)
    ========================= */
 
 .memory-grid{
-
   width:min(820px,100%);
-
   margin-top:34px;
 
   display:grid;
-
-  grid-template-columns:
-    repeat(
-      3,
-      1fr
-    );
-
+  grid-template-columns:repeat(3, 1fr);
   gap:15px;
 }
 
 .memory-card{
-
   position:relative;
 
   min-height:215px;
 
-  padding:0;
+  padding:22px;
 
-  border:0;
+  border:
+    1px solid
+    var(--line);
 
-  background:transparent;
+  border-radius:25px;
+
+  background:var(--card-front-bg);
+
+  box-shadow:var(--shadow-soft);
+
+  text-align:left;
 
   cursor:pointer;
 
-  perspective:900px;
+  overflow:hidden;
 
-  opacity:0;
+  transition:
+    transform .4s var(--ease-out),
+    box-shadow .4s ease,
+    background .4s ease;
 
-  transform:translateY(30px);
-
-  animation:cardEntrance .7s var(--ease-out) forwards;
+  animation:cardEntrance .7s var(--ease-out) both;
 }
 
-/* staggered entrance */
 .memory-card:nth-child(1){ animation-delay:.1s; }
 .memory-card:nth-child(2){ animation-delay:.2s; }
 .memory-card:nth-child(3){ animation-delay:.3s; }
@@ -1001,49 +1000,17 @@ button:focus-visible{
 .memory-card:nth-child(6){ animation-delay:.6s; }
 
 @keyframes cardEntrance{
+  from{
+    opacity:0;
+    transform:translateY(30px);
+  }
   to{
     opacity:1;
     transform:translateY(0);
   }
 }
 
-.memory-inner{
-  position:relative;
-  display:block;
-  width:100%;
-  height:100%;
-  min-height:215px;
-
-  transition:transform .75s var(--ease-out);
-  transform-style:preserve-3d;
-}
-
-.memory-card.flipped .memory-inner{
-  transform:rotateY(180deg);
-}
-
-.memory-front,
-.memory-back{
-  position:absolute;
-  inset:0;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  padding:22px;
-  border-radius:25px;
-  backface-visibility:hidden;
-  -webkit-backface-visibility:hidden;
-}
-
-.memory-front{
-  background:var(--card-front-bg);
-  border:1px solid var(--line);
-  box-shadow:var(--shadow-soft);
-  overflow:hidden;
-}
-
-.memory-front::before{
+.memory-card::before{
   content:"";
   position:absolute;
   width:150px;
@@ -1052,31 +1019,23 @@ button:focus-visible{
   top:-60px;
   border-radius:50%;
   background:rgba(248,207,226,.28);
+  transition:.4s ease;
 }
 
-.memory-back{
-  background:var(--card-back-bg);
-  border:1px solid rgba(211,115,157,.18);
-  box-shadow:0 18px 40px rgba(120,73,104,.16);
-  transform:rotateY(180deg);
-  overflow:hidden;
+.memory-card:hover{
+  transform:translateY(-7px) rotate(-.6deg);
+  box-shadow:var(--shadow-hover);
 }
 
-.memory-back::after{
-  content:"";
-  position:absolute;
-  width:100px;
-  height:100px;
-  left:-40px;
-  bottom:-40px;
-  border-radius:50%;
-  background:rgba(255,255,255,.35);
+.memory-card:hover::before{
+  transform:scale(1.2);
 }
 
 .memory-number{
   color:#b0a0ad;
   font-size:10px;
   letter-spacing:.18em;
+  display:block;
 }
 
 .memory-symbol{
@@ -1087,6 +1046,23 @@ button:focus-visible{
   transition:.3s ease;
 }
 
+.memory-card:hover .memory-symbol{
+  transform:scale(1.15);
+}
+
+.memory-text{
+  display:block;
+  margin-top:14px;
+  color:#534151;
+  font-family:"Cormorant Garamond", Georgia, serif;
+  font-size:25px;
+  line-height:1.05;
+  opacity:0;
+  transform:translateY(8px);
+  transition:opacity .5s ease, transform .5s ease;
+  max-width:90%;
+}
+
 .memory-hint{
   position:absolute;
   left:22px;
@@ -1095,42 +1071,37 @@ button:focus-visible{
   font-size:9px;
   letter-spacing:.15em;
   text-transform:uppercase;
+  transition:.3s ease;
 }
 
-.memory-symbol-back{
-  display:block;
-  font-size:22px;
-  color:#d873a2;
+/* flipped state */
+.memory-card.flipped{
+  background:var(--card-back-bg);
+  border-color:rgba(211,115,157,.18);
+  box-shadow:0 18px 40px rgba(120,73,104,.16);
 }
 
-.memory-text{
-  display:block;
-  margin-top:14px;
-  color:#5b4456;
-  font-family:"Cormorant Garamond", Georgia, serif;
-  font-size:24px;
-  line-height:1.1;
+.memory-card.flipped .memory-text{
+  opacity:1;
+  transform:translateY(0);
 }
 
-.flipped-hint{
-  position:absolute;
-  left:22px;
-  bottom:17px;
+.memory-card.flipped .memory-symbol{
+  transform:scale(.8);
+  opacity:.7;
+}
+
+.memory-card.flipped .memory-hint{
   color:#b06a90;
+  content:"keep this one ♡";
 }
 
-
-/* hover effect on front */
-.memory-card:not(.flipped):hover .memory-inner{
-  transform:translateY(-6px) rotate(-.5deg);
+.memory-card.flipped .memory-hint::after{
+  content:" keep this one ♡";
 }
 
-.memory-card:not(.flipped):hover .memory-front{
-  box-shadow:var(--shadow-hover);
-}
-
-.memory-card:not(.flipped):hover .memory-symbol{
-  transform:scale(1.2);
+.memory-card.flipped .memory-hint{
+  font-size:9px;
 }
 
 
@@ -2009,10 +1980,6 @@ button:focus-visible{
   }
 
   .memory-card{
-    min-height:165px;
-  }
-
-  .memory-inner{
     min-height:165px;
   }
 
