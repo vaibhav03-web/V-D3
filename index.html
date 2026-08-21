@@ -1,163 +1,572 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>For You ❤️</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#fff7fb" />
+
+  <title>A Little Something For You ✨</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
 
-<div class="hearts"></div>
+  <div class="ambient"></div>
+  <div class="stars"></div>
+  <div class="petals"></div>
 
-<div class="container">
+  <!-- Music control -->
+  <button
+    id="musicToggle"
+    class="music-toggle hidden"
+    type="button"
+    aria-label="Play music"
+  >
+    <span class="music-icon">♫</span>
+    <span class="music-label">play a little song</span>
+  </button>
 
-    <section id="intro" class="card">
-        <h1>Hey You 🌸</h1>
+  <main class="app">
 
-        <p>I wanted to show you something.</p>
-        <p>It'll only take a minute. Promise.</p>
+    <!-- ================= INTRO ================= -->
 
-        <button onclick="startJourney()">Okay 😊</button>
-        <button onclick="startJourney()">I'm curious 👀</button>
+    <section class="screen active" id="intro">
+
+      <div class="eyebrow">
+        a tiny corner of the internet
+      </div>
+
+      <div class="moon">☾</div>
+
+      <h1 class="hero-title">
+        Hey, you.
+        <span>I made you something.</span>
+      </h1>
+
+      <p class="hero-copy">
+        Nothing dramatic.<br>
+        Just a few things I've been wanting to say.
+      </p>
+
+      <button class="primary-btn" id="startBtn" type="button">
+        <span>okay, show me</span>
+        <span class="arrow">→</span>
+      </button>
+
+      <p class="tiny-note">
+        best experienced with headphones ♫
+      </p>
+
     </section>
 
-    <section id="choiceScreen" class="card hidden">
 
-        <h2>Pick one ✨</h2>
+    <!-- ================= CHOICE ================= -->
 
-        <div class="choice-grid">
-            <button onclick="showCards()">Something nice</button>
-            <button onclick="showCards()">Tell me more</button>
-            <button onclick="showCards()">Okayyy 😌</button>
-            <button onclick="showCards()">Go on...</button>
-        </div>
+    <section class="screen" id="choice">
 
-    </section>
+      <div class="eyebrow">
+        you get to choose
+      </div>
 
-    <section id="cardsSection" class="hidden">
+      <h2 class="section-title">
+        Where should we start?
+      </h2>
 
-        <h2 class="title">A few things about you 💕</h2>
+      <p class="section-copy">
+        Pick whichever one feels most like you.
+      </p>
 
-        <div class="cards">
+      <div class="choice-grid">
 
-            <div class="flip-card">
-                <div class="flip-inner">
-                    <div class="front">✨</div>
-                    <div class="back">
-                        You laugh at things nobody else finds funny.
-                    </div>
-                </div>
-            </div>
+        <button
+          class="choice-card"
+          type="button"
+          data-choice="little"
+        >
+          <span class="choice-icon">✦</span>
 
-            <div class="flip-card">
-                <div class="flip-inner">
-                    <div class="front">🌸</div>
-                    <div class="back">
-                        You somehow make ordinary days feel special.
-                    </div>
-                </div>
-            </div>
+          <span class="choice-title">
+            something little
+          </span>
 
-            <div class="flip-card">
-                <div class="flip-inner">
-                    <div class="front">☁️</div>
-                    <div class="back">
-                        Talking to you never feels like a chore.
-                    </div>
-                </div>
-            </div>
-
-            <div class="flip-card">
-                <div class="flip-inner">
-                    <div class="front">💫</div>
-                    <div class="back">
-                        You always made me feel something different.
-                    </div>
-                </div>
-            </div>
-
-            <div class="flip-card">
-                <div class="flip-inner">
-                    <div class="front">🌷</div>
-                    <div class="back">
-                        You're kinder than you realize.
-                    </div>
-                </div>
-            </div>
-
-            <div class="flip-card">
-                <div class="flip-inner">
-                    <div class="front">💛</div>
-                    <div class="back">
-                        You make people feel comfortable being themselves.
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-        <button class="continue-btn" onclick="startLoading()">
-            I want to ask you something...
+          <span class="choice-sub">
+            open this one first
+          </span>
         </button>
 
-    </section>
 
-    <section id="loadingScreen" class="card hidden">
+        <button
+          class="choice-card"
+          type="button"
+          data-choice="secret"
+        >
+          <span class="choice-icon">♡</span>
 
-        <div class="loader"></div>
+          <span class="choice-title">
+            a tiny secret
+          </span>
 
-        <h2 id="loadingText"></h2>
+          <span class="choice-sub">
+            okay, maybe not so tiny
+          </span>
+        </button>
 
-    </section>
 
-    <section id="proposalScreen" class="card hidden">
+        <button
+          class="choice-card"
+          type="button"
+          data-choice="random"
+        >
+          <span class="choice-icon">☁</span>
 
-        <div class="emoji">🥹💖</div>
+          <span class="choice-title">
+            something random
+          </span>
 
-        <h1>Okay...</h1>
+          <span class="choice-sub">
+            because why not
+          </span>
+        </button>
 
-        <p class="question">
-            Would you be my girlfriend?
-        </p>
 
-        <div class="proposal-buttons">
+        <button
+          class="choice-card"
+          type="button"
+          data-choice="warning"
+        >
+          <span class="choice-icon">!</span>
 
-            <button class="yes-btn" onclick="yesClicked()">
-                Yes ❤️
-            </button>
+          <span class="choice-title">
+            a small warning
+          </span>
 
-            <button class="no-btn" id="noBtn">
-                No
-            </button>
+          <span class="choice-sub">
+            proceed anyway
+          </span>
+        </button>
+
+      </div>
+
+
+      <div
+        class="reveal-area hidden"
+        id="revealArea"
+      >
+
+        <div class="envelope opened">
+
+          <div class="envelope-paper">
+            <p id="revealText"></p>
+          </div>
 
         </div>
 
-        <p id="begText"></p>
+        <button
+          class="text-btn"
+          id="choiceContinue"
+          type="button"
+        >
+          okay, one more thing
+          <span>→</span>
+        </button>
+
+      </div>
 
     </section>
 
-    <section id="successScreen" class="card hidden">
 
-        <h1>💖</h1>
+    <!-- ================= MEMORY CARDS ================= -->
 
-        <h2>You just made me ridiculously happy.</h2>
+    <section class="screen" id="cards">
 
-        <p>
-            I don't know exactly where this story goes,
-            but I'd really love to find out with you.
-        </p>
+      <div class="eyebrow">
+        things i've noticed
+      </div>
 
-        <div class="celebrate">
-            🌸 ✨ 💕 🌷 💫 ❤️
+      <h2 class="section-title">
+        A few little things about you.
+      </h2>
+
+      <p class="section-copy">
+        Some of these you probably don't even realize.
+      </p>
+
+
+      <div class="memory-grid">
+
+        <button class="memory-card" type="button">
+
+          <span class="memory-number">
+            01
+          </span>
+
+          <span class="memory-symbol">
+            ✦
+          </span>
+
+          <span class="memory-text">
+            You laugh at things nobody else finds funny.
+          </span>
+
+          <span class="memory-hint">
+            tap to read
+          </span>
+
+        </button>
+
+
+        <button class="memory-card" type="button">
+
+          <span class="memory-number">
+            02
+          </span>
+
+          <span class="memory-symbol">
+            ♡
+          </span>
+
+          <span class="memory-text">
+            You make normal conversations somehow feel worth remembering.
+          </span>
+
+          <span class="memory-hint">
+            tap to read
+          </span>
+
+        </button>
+
+
+        <button class="memory-card" type="button">
+
+          <span class="memory-number">
+            03
+          </span>
+
+          <span class="memory-symbol">
+            ☁
+          </span>
+
+          <span class="memory-text">
+            There are little things you do that stay in my head longer than they should.
+          </span>
+
+          <span class="memory-hint">
+            tap to read
+          </span>
+
+        </button>
+
+
+        <button class="memory-card" type="button">
+
+          <span class="memory-number">
+            04
+          </span>
+
+          <span class="memory-symbol">
+            ✧
+          </span>
+
+          <span class="memory-text">
+            You made me feel something I hadn't really felt with someone before.
+          </span>
+
+          <span class="memory-hint">
+            tap to read
+          </span>
+
+        </button>
+
+
+        <button class="memory-card" type="button">
+
+          <span class="memory-number">
+            05
+          </span>
+
+          <span class="memory-symbol">
+            ☾
+          </span>
+
+          <span class="memory-text">
+            You have a way of making people feel comfortable being themselves.
+          </span>
+
+          <span class="memory-hint">
+            tap to read
+          </span>
+
+        </button>
+
+
+        <button class="memory-card" type="button">
+
+          <span class="memory-number">
+            06
+          </span>
+
+          <span class="memory-symbol">
+            ❀
+          </span>
+
+          <span class="memory-text">
+            And honestly, I like having you around more than I know how to explain.
+          </span>
+
+          <span class="memory-hint">
+            tap to read
+          </span>
+
+        </button>
+
+      </div>
+
+
+      <button
+        class="primary-btn"
+        id="askBtn"
+        type="button"
+      >
+
+        <span>
+          there's something I want to ask you
+        </span>
+
+        <span class="arrow">
+          →
+        </span>
+
+      </button>
+
+    </section>
+
+
+    <!-- ================= LOADING ================= -->
+
+    <section class="screen" id="loading">
+
+      <div class="loading-orbit">
+
+        <div class="orbit-dot one"></div>
+        <div class="orbit-dot two"></div>
+        <div class="orbit-dot three"></div>
+
+        <div class="orbit-core">
+          ♡
         </div>
 
+      </div>
+
+
+      <div class="eyebrow">
+        one second
+      </div>
+
+
+      <h2
+        class="section-title"
+        id="loadingTitle"
+      >
+        collecting courage...
+      </h2>
+
+
+      <p
+        class="loading-copy"
+        id="loadingCopy"
+      >
+        this suddenly feels very real.
+      </p>
+
+
+      <div class="progress-shell">
+
+        <div
+          class="progress-bar"
+          id="progressBar"
+        ></div>
+
+      </div>
+
+
+      <div
+        class="loading-percent"
+        id="loadingPercent"
+      >
+        0%
+      </div>
+
     </section>
 
-</div>
 
-<script src="script.js"></script>
+    <!-- ================= PROPOSAL ================= -->
+
+    <section
+      class="screen proposal-screen"
+      id="proposal"
+    >
+
+      <div class="sparkle-line">
+        ✦　✧　♡　✧　✦
+      </div>
+
+
+      <div class="proposal-badge">
+        one last thing
+      </div>
+
+
+      <h2 class="proposal-title">
+
+        Okay...
+
+        <span>
+          I really want to ask you this.
+        </span>
+
+      </h2>
+
+
+      <p class="proposal-question">
+        Will you be my girlfriend?
+      </p>
+
+
+      <p class="proposal-sub">
+        No pressure. Just one very nervous person
+        asking another very lovely person.
+      </p>
+
+
+      <div class="proposal-buttons">
+
+        <button
+          class="yes-btn"
+          id="yesBtn"
+          type="button"
+        >
+          yes, I'd love to ♡
+        </button>
+
+
+        <button
+          class="no-btn"
+          id="noBtn"
+          type="button"
+        >
+          no
+        </button>
+
+      </div>
+
+
+      <p
+        class="beg-text"
+        id="begText"
+      ></p>
+
+    </section>
+
+
+    <!-- ================= SUCCESS ================= -->
+
+    <section
+      class="screen success-screen"
+      id="success"
+    >
+
+      <div
+        class="confetti-layer"
+        id="confettiLayer"
+      ></div>
+
+
+      <div class="success-orbit">
+
+        <div class="success-heart">
+          ♡
+        </div>
+
+      </div>
+
+
+      <div class="eyebrow">
+        okay wow
+      </div>
+
+
+      <h2 class="success-title">
+
+        You said yes.
+
+        <span>
+          That makes me very, very happy.
+        </span>
+
+      </h2>
+
+
+      <p class="success-copy">
+
+        I was prepared to be nervous for
+        approximately forever, so this outcome
+        is a pretty nice surprise.
+
+      </p>
+
+
+      <div class="status-pill">
+
+        <span class="status-dot"></span>
+
+        officially us ✨
+
+      </div>
+
+
+      <p class="tiny-note">
+        thank you for choosing me.
+      </p>
+
+    </section>
+
+  </main>
+
+
+  <!--
+    OPTIONAL MUSIC
+
+    Just upload a file called:
+
+    song.mp3
+
+    beside these three files.
+
+    No code changes are necessary.
+  -->
+
+  <audio
+    id="bgMusic"
+    loop
+    preload="none"
+  >
+    <source
+      src="song.mp3"
+      type="audio/mpeg"
+    >
+  </audio>
+
+
+  <script src="script.js"></script>
 
 </body>
 </html>
