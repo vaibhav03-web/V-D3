@@ -1,198 +1,139 @@
-/* =========================================
-   SCREEN NAVIGATION
-   ========================================= */
+/* =========================================================
+   DREAMY PROPOSAL SITE - INTERACTION CONTROLLER
+   ========================================================= */
 
-const screens = [
-  ...document.querySelectorAll(".screen")
-];
+const screens = [...document.querySelectorAll(".screen")];
 
-
-function showScreen(id){
-
+function showScreen(id) {
   screens.forEach(screen => {
-
     screen.classList.remove("active");
-
   });
 
+  const target = document.getElementById(id);
 
-  const target =
-    document.getElementById(id);
-
-
-  if(target){
-
+  if (target) {
     target.classList.add("active");
-
   }
 
-
   window.scrollTo({
-
-    top:0,
-
-    behavior:"smooth"
-
+    top: 0,
+    behavior: "smooth"
   });
 
+  createSparkles();
 }
 
 
-/* =========================================
-   OPTIONAL MUSIC
-   =========================================
+/* =========================================================
+   MUSIC
+   ========================================================= */
 
-   Put this file beside the other files:
-
-   song.mp3
-
-   You do NOT need to change the code.
-
-   The music button automatically appears
-   when the MP3 exists.
-
-   Browsers may block automatic playback,
-   so the first click on the website
-   starts the music.
-   ========================================= */
-
-const music =
-  document.getElementById("bgMusic");
-
-
-const musicToggle =
-  document.getElementById("musicToggle");
-
+const music = document.getElementById("bgMusic");
+const musicToggle = document.getElementById("musicToggle");
 
 let musicAvailable = true;
 
-
-music.addEventListener(
-  "error",
-  () => {
-
+if (music) {
+  music.addEventListener("error", () => {
     musicAvailable = false;
 
-    musicToggle.classList.add("hidden");
-
-  }
-);
-
-
-music.addEventListener(
-  "canplay",
-  () => {
-
-    if(musicAvailable){
-
-      musicToggle.classList.remove("hidden");
-
+    if (musicToggle) {
+      musicToggle.classList.add("hidden");
     }
+  });
 
-  }
-);
+  music.addEventListener("canplay", () => {
+    if (musicAvailable && musicToggle) {
+      musicToggle.classList.remove("hidden");
+    }
+  });
+}
 
+function tryStartMusic() {
+  if (!musicAvailable || !music) return;
 
-function tryStartMusic(){
-
-  if(!musicAvailable){
-    return;
-  }
-
+  music.volume = 0.35;
 
   music.play()
-
     .then(() => {
+      if (musicToggle) {
+        musicToggle.classList.remove("hidden");
 
-      musicToggle.classList.remove(
-        "hidden"
-      );
+        const label =
+          musicToggle.querySelector(".music-label");
 
-
-      musicToggle
-        .querySelector(".music-label")
-        .textContent =
-        "music on ♫";
-
+        if (label) {
+          label.textContent = "music on ♫";
+        }
+      }
     })
-
-    .catch(() => {
-
-      /*
-        Browser blocked autoplay.
-        The site continues normally.
-      */
-
-    });
-
+    .catch(() => {});
 }
 
+if (musicToggle) {
+  musicToggle.addEventListener("click", () => {
 
-function toggleMusic(){
+    if (!musicAvailable || !music) return;
 
-  if(!musicAvailable){
-    return;
-  }
+    if (music.paused) {
 
+      music.play()
+        .then(() => {
 
-  if(music.paused){
+          const label =
+            musicToggle.querySelector(".music-label");
 
-    music.play()
+          if (label) {
+            label.textContent = "music on ♫";
+          }
 
-      .then(() => {
+        })
+        .catch(() => {});
 
-        musicToggle
-          .querySelector(".music-label")
-          .textContent =
-          "music on ♫";
+    } else {
 
-      })
+      music.pause();
 
-      .catch(() => {});
+      const label =
+        musicToggle.querySelector(".music-label");
 
-
-  }else{
-
-    music.pause();
-
-
-    musicToggle
-      .querySelector(".music-label")
-      .textContent =
-      "music off";
-
-  }
-
-}
-
-
-musicToggle.addEventListener(
-  "click",
-  toggleMusic
-);
-
-
-/* =========================================
-   INTRO
-   ========================================= */
-
-document
-  .getElementById("startBtn")
-  .addEventListener(
-    "click",
-    () => {
-
-      tryStartMusic();
-
-      showScreen("choice");
+      if (label) {
+        label.textContent = "music off";
+      }
 
     }
-  );
+
+  });
+}
 
 
-/* =========================================
-   CHOICE / REVEAL
-   ========================================= */
+/* =========================================================
+   INTRO
+   ========================================================= */
+
+const startBtn =
+  document.getElementById("startBtn");
+
+if (startBtn) {
+
+  startBtn.addEventListener("click", () => {
+
+    tryStartMusic();
+
+    createBurst();
+
+    setTimeout(() => {
+      showScreen("choice");
+    }, 250);
+
+  });
+
+}
+
+
+/* =========================================================
+   CHOICE SCREEN
+   ========================================================= */
 
 const revealMessages = {
 
@@ -206,465 +147,514 @@ const revealMessages = {
     "Random fact: talking to you has an oddly reliable ability to improve my mood.",
 
   warning:
-    "Small warning: there is a question waiting at the end of this. I have been nervous about it for a while."
+    "Small warning: there is a question waiting at the end of this. I've been nervous about it for a while."
 
 };
 
+const choiceCards =
+  document.querySelectorAll(".choice-card");
 
-document
-  .querySelectorAll(".choice-card")
-  .forEach(card => {
+choiceCards.forEach(card => {
 
-    card.addEventListener(
-      "click",
-      () => {
+  card.addEventListener("click", () => {
 
-        const choice =
-          card.dataset.choice;
+    const choice = card.dataset.choice;
 
+    choiceCards.forEach(c => {
+      c.classList.remove("selected");
+    });
 
-        document
-          .getElementById("revealText")
-          .textContent =
-          revealMessages[choice];
+    card.classList.add("selected");
 
+    const revealArea =
+      document.getElementById("revealArea");
 
-        const revealArea =
-          document.getElementById(
-            "revealArea"
-          );
+    const revealText =
+      document.getElementById("revealText");
 
+    if (revealText) {
+      revealText.textContent =
+        revealMessages[choice];
+    }
 
-        revealArea.classList.remove(
-          "hidden"
-        );
+    if (revealArea) {
 
+      revealArea.classList.remove("hidden");
 
-        card.classList.add(
-          "selected"
-        );
+      revealArea.classList.add("revealing");
 
+      setTimeout(() => {
 
-        setTimeout(() => {
+        revealArea.scrollIntoView({
+          behavior: "smooth",
+          block: "center"
+        });
 
-          revealArea.scrollIntoView({
+      }, 150);
 
-            behavior:"smooth",
+    }
 
-            block:"center"
-
-          });
-
-        },80);
-
-      }
-    );
+    createBurst();
 
   });
 
-
-document
-  .getElementById("choiceContinue")
-  .addEventListener(
-    "click",
-    () => {
-
-      showScreen("cards");
-
-    }
-  );
+});
 
 
-/* =========================================
-   MEMORY CARDS
-   ========================================= */
+const choiceContinue =
+  document.getElementById("choiceContinue");
 
-document
-  .querySelectorAll(".memory-card")
-  .forEach(card => {
+if (choiceContinue) {
 
-    card.addEventListener(
-      "click",
-      () => {
+  choiceContinue.addEventListener("click", () => {
 
-        card.classList.toggle(
-          "flipped"
-        );
-
-
-        const hint =
-          card.querySelector(
-            ".memory-hint"
-          );
-
-
-        if(
-          card.classList.contains(
-            "flipped"
-          )
-        ){
-
-          hint.textContent =
-            "keep this one";
-
-        }else{
-
-          hint.textContent =
-            "tap to read";
-
-        }
-
-      }
-    );
+    showScreen("cards");
 
   });
-
-
-/* =========================================
-   LOADING / COURAGE
-   ========================================= */
-
-const loadingSteps = [
-
-  [
-    "collecting courage...",
-    "this seemed much easier in my head."
-  ],
-
-  [
-    "re-reading everything...",
-    "okay, don't overthink this."
-  ],
-
-  [
-    "panicking a little...",
-    "completely normal. probably."
-  ],
-
-  [
-    "taking a breath...",
-    "you've got this."
-  ],
-
-  [
-    "almost there...",
-    "one last deep breath."
-  ],
-
-  [
-    "okay, here goes...",
-    "no turning back now."
-  ]
-
-];
-
-
-document
-  .getElementById("askBtn")
-  .addEventListener(
-    "click",
-    () => {
-
-      showScreen("loading");
-
-
-      const title =
-        document.getElementById(
-          "loadingTitle"
-        );
-
-
-      const copy =
-        document.getElementById(
-          "loadingCopy"
-        );
-
-
-      const percent =
-        document.getElementById(
-          "loadingPercent"
-        );
-
-
-      const bar =
-        document.getElementById(
-          "progressBar"
-        );
-
-
-      let progress = 0;
-
-
-      const tick =
-        setInterval(
-          () => {
-
-            progress +=
-              Math.floor(
-                Math.random() * 10
-              ) + 8;
-
-
-            if(progress > 100){
-
-              progress = 100;
-
-            }
-
-
-            const messageIndex =
-              Math.min(
-
-                Math.floor(
-                  progress /
-                  (100 / loadingSteps.length)
-                ),
-
-                loadingSteps.length - 1
-
-              );
-
-
-            title.textContent =
-              loadingSteps[
-                messageIndex
-              ][0];
-
-
-            copy.textContent =
-              loadingSteps[
-                messageIndex
-              ][1];
-
-
-            percent.textContent =
-              `${progress}%`;
-
-
-            bar.style.width =
-              `${progress}%`;
-
-
-            if(progress >= 100){
-
-              clearInterval(tick);
-
-
-              setTimeout(
-                () => {
-
-                  showScreen(
-                    "proposal"
-                  );
-
-                },
-                900
-              );
-
-            }
-
-          },
-
-          420
-
-        );
-
-    }
-  );
-
-
-/* =========================================
-   PLAYFUL NO BUTTON
-   ========================================= */
-
-const noBtn =
-  document.getElementById(
-    "noBtn"
-  );
-
-
-const begText =
-  document.getElementById(
-    "begText"
-  );
-
-
-const noMessages = [
-
-  "nooo, I don't think that's the button I meant 🥹",
-
-  "wait wait, maybe try the other one?",
-
-  "are you sure? I'm already nervous 😭",
-
-  "that button is getting suspiciously difficult to click",
-
-  "please don't choose chaos today",
-
-  "I spent so much time making the other button prettier",
-
-  "okay... I can take a hint. maybe. 🥺",
-
-  "one more chance?",
-
-  "the pink one is looking very hopeful right now"
-
-];
-
-
-let noCount = 0;
-
-
-function moveNoButton(){
-
-  if(
-    window.innerWidth < 560
-  ){
-
-    noBtn.style.transform =
-      `translateX(${
-        (Math.random() * 120) - 60
-      }px)`;
-
-  }else{
-
-    const parent =
-      noBtn.parentElement
-        .getBoundingClientRect();
-
-
-    const btnRect =
-      noBtn.getBoundingClientRect();
-
-
-    const maxX =
-      Math.max(
-
-        60,
-
-        parent.width -
-        btnRect.width -
-        20
-
-      );
-
-
-    const x =
-      Math.random() * maxX -
-      maxX / 2;
-
-
-    noBtn.style.transform =
-      `translateX(${x}px)`;
-
-  }
-
-
-  begText.textContent =
-    noMessages[
-      noCount %
-      noMessages.length
-    ];
-
-
-  noCount++;
 
 }
 
 
-noBtn.addEventListener(
-  "mouseenter",
-  moveNoButton
-);
+/* =========================================================
+   MEMORY CARDS
+   ========================================================= */
 
+const memoryCards =
+  document.querySelectorAll(".memory-card");
 
-noBtn.addEventListener(
-  "click",
-  moveNoButton
-);
+memoryCards.forEach((card, index) => {
 
+  card.addEventListener("click", () => {
 
-/* =========================================
-   YES BUTTON
-   ========================================= */
+    card.classList.toggle("flipped");
 
-document
-  .getElementById("yesBtn")
-  .addEventListener(
-    "click",
-    () => {
+    const hint =
+      card.querySelector(".memory-hint");
 
-      showScreen("success");
+    if (hint) {
 
-      startCelebration();
-
-
-      if(
-        musicAvailable &&
-        music.paused
-      ){
-
-        tryStartMusic();
-
+      if (card.classList.contains("flipped")) {
+        hint.textContent = "keep this one ♡";
+      } else {
+        hint.textContent = "tap to read";
       }
 
     }
+
+    createBurst();
+
+    /*
+      Small surprise:
+      after the third card is opened,
+      reveal a hidden message.
+    */
+
+    const flipped =
+      document.querySelectorAll(".memory-card.flipped");
+
+    if (flipped.length === 3) {
+      unlockSecretMessage();
+    }
+
+  });
+
+});
+
+
+function unlockSecretMessage() {
+
+  if (document.getElementById("secretMessage")) {
+    return;
+  }
+
+  const message =
+    document.createElement("div");
+
+  message.id = "secretMessage";
+
+  message.innerHTML = `
+    <div class="secret-glow"></div>
+    <span>one more thing...</span>
+    <strong>you're really easy to like.</strong>
+  `;
+
+  document
+    .getElementById("cards")
+    .appendChild(message);
+
+  setTimeout(() => {
+    message.classList.add("show");
+  }, 100);
+
+  createBurst();
+}
+
+
+/* =========================================================
+   LOADING / SUSPENSE
+   ========================================================= */
+
+const loadingSteps = [
+
+  {
+    title: "okay...",
+    copy: "this suddenly feels a little more real."
+  },
+
+  {
+    title: "don't panic.",
+    copy: "I'm definitely not panicking."
+  },
+
+  {
+    title: "actually...",
+    copy: "I might be panicking a little."
+  },
+
+  {
+    title: "taking a breath...",
+    copy: "one second. I want to ask this properly."
+  },
+
+  {
+    title: "thinking...",
+    copy: "about how to say this without making it weird."
+  },
+
+  {
+    title: "almost there...",
+    copy: "please be patient with my nervousness."
+  },
+
+  {
+    title: "okay.",
+    copy: "I think I'm ready."
+  }
+
+];
+
+
+const askBtn =
+  document.getElementById("askBtn");
+
+if (askBtn) {
+
+  askBtn.addEventListener("click", startSuspense);
+
+}
+
+
+function startSuspense() {
+
+  showScreen("loading");
+
+  const title =
+    document.getElementById("loadingTitle");
+
+  const copy =
+    document.getElementById("loadingCopy");
+
+  const bar =
+    document.getElementById("progressBar");
+
+  const percent =
+    document.getElementById("loadingPercent");
+
+  /*
+    Deliberately slow:
+    around 20-24 seconds.
+
+    The messages stay visible long enough
+    to actually read.
+  */
+
+  let step = 0;
+
+  let progress = 0;
+
+  const stepDuration = 3000;
+
+  function showStep() {
+
+    if (step >= loadingSteps.length) {
+
+      finishSuspense();
+
+      return;
+    }
+
+    const current =
+      loadingSteps[step];
+
+    if (title) {
+      title.style.opacity = "0";
+    }
+
+    if (copy) {
+      copy.style.opacity = "0";
+    }
+
+    setTimeout(() => {
+
+      if (title) {
+        title.textContent =
+          current.title;
+
+        title.style.opacity = "1";
+      }
+
+      if (copy) {
+        copy.textContent =
+          current.copy;
+
+        copy.style.opacity = "1";
+      }
+
+    }, 250);
+
+    const nextProgress =
+      Math.round(
+        ((step + 1) /
+          loadingSteps.length) *
+          94
+      );
+
+    if (bar) {
+      bar.style.width =
+        `${nextProgress}%`;
+    }
+
+    if (percent) {
+      percent.textContent =
+        `${nextProgress}%`;
+    }
+
+    createTinySparkle();
+
+    step++;
+
+    setTimeout(showStep, stepDuration);
+
+  }
+
+  showStep();
+
+}
+
+
+function finishSuspense() {
+
+  const title =
+    document.getElementById("loadingTitle");
+
+  const copy =
+    document.getElementById("loadingCopy");
+
+  const bar =
+    document.getElementById("progressBar");
+
+  const percent =
+    document.getElementById("loadingPercent");
+
+  if (title) {
+    title.textContent = "one last thing...";
+  }
+
+  if (copy) {
+    copy.textContent =
+      "okay. here we go.";
+  }
+
+  if (bar) {
+    bar.style.width = "100%";
+  }
+
+  if (percent) {
+    percent.textContent = "100%";
+  }
+
+  /*
+    Hold the final suspense
+    before showing the question.
+  */
+
+  setTimeout(() => {
+
+    createMassiveBurst();
+
+    setTimeout(() => {
+
+      showScreen("proposal");
+
+    }, 1200);
+
+  }, 2500);
+
+}
+
+
+/* =========================================================
+   PROPOSAL
+   ========================================================= */
+
+const noBtn =
+  document.getElementById("noBtn");
+
+const begText =
+  document.getElementById("begText");
+
+const noMessages = [
+
+  "wait... that's not the one I was hoping for 🥹",
+
+  "are you sure?",
+  
+  "I feel like we should reconsider this.",
+
+  "you clicked the wrong answer. respectfully.",
+
+  "okay okay... one more try?",
+
+  "that button is suspiciously hard to catch.",
+
+  "I'm choosing to believe that was an accident.",
+
+  "please don't make me use my final trick.",
+
+  "the other button is literally right there ♡"
+
+];
+
+let noCount = 0;
+
+if (noBtn) {
+
+  noBtn.addEventListener(
+    "mouseenter",
+    dodgeNoButton
   );
 
+  noBtn.addEventListener(
+    "click",
+    dodgeNoButton
+  );
 
-/* =========================================
-   CONFETTI
-   ========================================= */
+}
 
-function startCelebration(){
+
+function dodgeNoButton() {
+
+  noCount++;
+
+  if (begText) {
+
+    begText.textContent =
+      noMessages[
+        (noCount - 1) %
+        noMessages.length
+      ];
+
+  }
+
+
+  if (window.innerWidth < 600) {
+
+    const x =
+      (Math.random() * 120) - 60;
+
+    const y =
+      (Math.random() * 80) - 40;
+
+    noBtn.style.transform =
+      `translate(${x}px, ${y}px)`;
+
+  } else {
+
+    const x =
+      (Math.random() * 280) - 140;
+
+    const y =
+      (Math.random() * 120) - 60;
+
+    noBtn.style.transform =
+      `translate(${x}px, ${y}px)`;
+
+  }
+
+  createTinySparkle();
+
+}
+
+
+/* =========================================================
+   YES
+   ========================================================= */
+
+const yesBtn =
+  document.getElementById("yesBtn");
+
+if (yesBtn) {
+
+  yesBtn.addEventListener("click", () => {
+
+    tryStartMusic();
+
+    createMassiveBurst();
+
+    showScreen("success");
+
+    startCelebration();
+
+  });
+
+}
+
+
+/* =========================================================
+   CELEBRATION
+   ========================================================= */
+
+function startCelebration() {
 
   const layer =
     document.getElementById(
       "confettiLayer"
     );
 
+  if (!layer) {
+    return;
+  }
 
   layer.innerHTML = "";
 
-
   const symbols = [
-
     "♡",
+    "♥",
     "✦",
     "✧",
-    "•",
-    "♥",
-    "❀"
-
+    "❀",
+    "·"
   ];
 
-
   const colors = [
-
     "#d979a5",
     "#e4a7c1",
     "#b58aa7",
     "#d5b4c9",
     "#c96d97"
-
   ];
 
-
-  for(
+  for (
     let i = 0;
-    i < 65;
+    i < 90;
     i++
-  ){
+  ) {
 
     const piece =
-      document.createElement(
-        "span"
-      );
-
+      document.createElement("span");
 
     piece.className =
       "confetti";
-
 
     piece.textContent =
       symbols[
@@ -674,10 +664,8 @@ function startCelebration(){
         )
       ];
 
-
     piece.style.left =
       `${Math.random() * 100}%`;
-
 
     piece.style.color =
       colors[
@@ -687,23 +675,170 @@ function startCelebration(){
         )
       ];
 
-
     piece.style.fontSize =
-      `${10 + Math.random() * 15}px`;
-
+      `${10 + Math.random() * 18}px`;
 
     piece.style.animationDelay =
-      `${Math.random() * 1.8}s`;
-
+      `${Math.random() * 1.7}s`;
 
     piece.style.animationDuration =
-      `${2.7 + Math.random() * 2}s`;
+      `${3 + Math.random() * 2.5}s`;
 
-
-    layer.appendChild(
-      piece
-    );
+    layer.appendChild(piece);
 
   }
 
 }
+
+
+/* =========================================================
+   PARTICLES / SPARKLES
+   ========================================================= */
+
+function createSparkles() {
+
+  for (let i = 0; i < 5; i++) {
+    createTinySparkle();
+  }
+
+}
+
+
+function createTinySparkle() {
+
+  const sparkle =
+    document.createElement("div");
+
+  sparkle.className =
+    "floating-sparkle";
+
+  sparkle.textContent =
+    Math.random() > 0.5
+      ? "✦"
+      : "♡";
+
+  sparkle.style.left =
+    `${20 + Math.random() * 60}%`;
+
+  sparkle.style.top =
+    `${25 + Math.random() * 50}%`;
+
+  sparkle.style.animationDuration =
+    `${2 + Math.random() * 2}s`;
+
+  document.body.appendChild(
+    sparkle
+  );
+
+  setTimeout(() => {
+    sparkle.remove();
+  }, 4000);
+
+}
+
+
+function createBurst() {
+
+  for (let i = 0; i < 12; i++) {
+
+    setTimeout(() => {
+
+      createTinySparkle();
+
+    }, i * 35);
+
+  }
+
+}
+
+
+function createMassiveBurst() {
+
+  for (let i = 0; i < 50; i++) {
+
+    setTimeout(() => {
+
+      createTinySparkle();
+
+    }, i * 30);
+
+  }
+
+}
+
+
+/* =========================================================
+   LITTLE EASTER EGG
+   ========================================================= */
+
+/*
+   Click the moon three times.
+*/
+
+const moon =
+  document.querySelector(".moon");
+
+let moonClicks = 0;
+
+if (moon) {
+
+  moon.addEventListener("click", () => {
+
+    moonClicks++;
+
+    if (moonClicks === 3) {
+
+      moonClicks = 0;
+
+      const note =
+        document.createElement("div");
+
+      note.className =
+        "moon-secret";
+
+      note.innerHTML = `
+        <span>you found the secret 🌙</span>
+        <strong>okay, you're cute too.</strong>
+      `;
+
+      document.body.appendChild(
+        note
+      );
+
+      setTimeout(() => {
+        note.classList.add("show");
+      }, 50);
+
+      createMassiveBurst();
+
+      setTimeout(() => {
+
+        note.classList.remove("show");
+
+        setTimeout(() => {
+          note.remove();
+        }, 500);
+
+      }, 3500);
+
+    }
+
+  });
+
+}
+
+
+/* =========================================================
+   INITIAL ATMOSPHERE
+   ========================================================= */
+
+window.addEventListener(
+  "load",
+  () => {
+
+    setTimeout(() => {
+      createSparkles();
+    }, 600);
+
+  }
+);
