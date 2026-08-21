@@ -19,40 +19,21 @@
 
 <body>
 
-  <!-- dreamy background -->
   <div class="ambient"></div>
   <div class="stars"></div>
   <div class="petals"></div>
 
-  <!-- journey progress -->
-  <div class="progress-dots" id="progressDots">
-    <span class="dot" data-step="0"></span>
-    <span class="dot" data-step="1"></span>
-    <span class="dot" data-step="2"></span>
-    <span class="dot" data-step="3"></span>
-    <span class="dot" data-step="4"></span>
-  </div>
-
-  <!-- music -->
-  <button
-    id="musicToggle"
-    class="music-toggle hidden"
-    type="button"
-  >
+  <button id="musicToggle" class="music-toggle hidden" type="button">
     <span class="music-icon">♫</span>
     <span class="music-label">play a little song</span>
   </button>
 
+
   <main class="app">
 
-    <!-- ======================================
-         INTRO
-    ======================================= -->
+    <!-- ================= INTRO ================= -->
 
-    <section
-      class="screen active"
-      id="intro"
-    >
+    <section class="screen active" id="intro">
 
       <div class="eyebrow">
         a tiny corner of the internet
@@ -64,7 +45,7 @@
 
       <h1 class="hero-title">
         Hey, you.
-        <span class="shimmer">I made you something.</span>
+        <span>I made you something.</span>
       </h1>
 
       <p class="hero-copy">
@@ -72,12 +53,8 @@
         Just a few things I've been wanting to say.
       </p>
 
-      <button
-        class="primary-btn"
-        id="startBtn"
-        type="button"
-      >
-        <span>okay, show me</span>
+      <button class="primary-btn" id="startBtn" type="button">
+        okay, show me
         <span class="arrow">→</span>
       </button>
 
@@ -88,14 +65,9 @@
     </section>
 
 
-    <!-- ======================================
-         CHOICE
-    ======================================= -->
+    <!-- ================= CHOICE ================= -->
 
-    <section
-      class="screen"
-      id="choice"
-    >
+    <section class="screen" id="choice">
 
       <div class="eyebrow">
         you get to choose
@@ -106,123 +78,53 @@
       </h2>
 
       <p class="section-copy">
-        Pick whichever one feels most like you.
+        Four little doors. Pick one.
       </p>
 
 
       <div class="choice-grid">
 
-        <button
-          class="choice-card"
-          type="button"
-          data-choice="little"
-        >
-
-          <span class="choice-icon">
-            ✦
-          </span>
-
-          <span class="choice-title">
-            something little
-          </span>
-
-          <span class="choice-sub">
-            open this one first
-          </span>
-
+        <button class="choice-card choice-one" data-choice="little" type="button">
+          <span class="choice-icon">✦</span>
+          <span class="choice-title">something little</span>
+          <span class="choice-sub">open this one first</span>
         </button>
 
-
-        <button
-          class="choice-card"
-          type="button"
-          data-choice="secret"
-        >
-
-          <span class="choice-icon">
-            ♡
-          </span>
-
-          <span class="choice-title">
-            a tiny secret
-          </span>
-
-          <span class="choice-sub">
-            okay, maybe not so tiny
-          </span>
-
+        <button class="choice-card choice-two" data-choice="secret" type="button">
+          <span class="choice-icon">♡</span>
+          <span class="choice-title">a tiny secret</span>
+          <span class="choice-sub">okay, maybe not so tiny</span>
         </button>
 
-
-        <button
-          class="choice-card"
-          type="button"
-          data-choice="random"
-        >
-
-          <span class="choice-icon">
-            ☁
-          </span>
-
-          <span class="choice-title">
-            something random
-          </span>
-
-          <span class="choice-sub">
-            because why not
-          </span>
-
+        <button class="choice-card choice-three" data-choice="random" type="button">
+          <span class="choice-icon">☁</span>
+          <span class="choice-title">something random</span>
+          <span class="choice-sub">because why not</span>
         </button>
 
-
-        <button
-          class="choice-card"
-          type="button"
-          data-choice="warning"
-        >
-
-          <span class="choice-icon">
-            !
-          </span>
-
-          <span class="choice-title">
-            a small warning
-          </span>
-
-          <span class="choice-sub">
-            proceed anyway
-          </span>
-
+        <button class="choice-card choice-four" data-choice="warning" type="button">
+          <span class="choice-icon">!</span>
+          <span class="choice-title">small warning</span>
+          <span class="choice-sub">proceed anyway</span>
         </button>
 
       </div>
 
 
-      <div
-        class="reveal-area hidden"
-        id="revealArea"
-      >
+      <div class="reveal-area hidden" id="revealArea">
 
-        <div class="envelope">
+        <div class="letter">
+          <div class="letter-top">a little note</div>
 
-          <div class="envelope-paper">
+          <p id="revealText"></p>
 
-            <p id="revealText"></p>
-
+          <div class="letter-bottom">
+            ♡
           </div>
-
         </div>
 
-
-        <button
-          class="text-btn"
-          id="choiceContinue"
-          type="button"
-        >
-
-          okay, one more thing
-          <span>→</span>
-
+        <button class="text-btn" id="choiceContinue" type="button">
+          okay, one more thing →
         </button>
 
       </div>
@@ -230,157 +132,200 @@
     </section>
 
 
-    <!-- ======================================
-         MEMORY CARDS
-    ======================================= -->
+    <!-- ================= CARDS ================= -->
 
-    <section
-      class="screen"
-      id="cards"
-    >
+    <section class="screen cards-screen" id="cards">
 
       <div class="eyebrow">
         things i've noticed
       </div>
 
       <h2 class="section-title">
-        A few little things about you.
+        You know what's funny?
       </h2>
 
       <p class="section-copy">
-        Tap each one. There's a bonus if you open them all.
+        There are a lot of little things I like about you.
+        Tap the cards. I hid them.
       </p>
 
 
       <div class="memory-grid">
 
-        <button
-          class="memory-card"
-          type="button"
-        >
 
-          <span class="memory-number">
-            01
-          </span>
+        <button class="memory-card" type="button">
 
-          <span class="memory-symbol">
-            ✦
-          </span>
+          <div class="memory-inner">
 
-          <span class="memory-text">
-            You laugh at things nobody else finds funny.
-          </span>
+            <div class="memory-front">
+              <span class="memory-number">01</span>
+              <span class="memory-big">✦</span>
+              <span class="memory-label">a little thing</span>
+              <span class="memory-tap">tap to open</span>
+            </div>
 
-          <span class="memory-hint">
-            tap to read
-          </span>
+            <div class="memory-back">
+              <span class="memory-number">01</span>
+              <p>
+                You laugh at things nobody else finds funny.
+              </p>
+              <span class="memory-heart">♡</span>
+            </div>
 
-        </button>
-
-
-        <button
-          class="memory-card"
-          type="button"
-        >
-
-          <span class="memory-number">
-            02
-          </span>
-
-          <span class="memory-symbol">
-            ♡
-          </span>
-
-          <span class="memory-text">
-            You make ordinary conversations worth remembering.
-          </span>
-
-          <span class="memory-hint">
-            tap to read
-          </span>
+          </div>
 
         </button>
 
 
-        <button
-          class="memory-card"
-          type="button"
-        >
+        <button class="memory-card" type="button">
 
-          <span class="memory-number">
-            03
-          </span>
+          <div class="memory-inner">
 
-          <span class="memory-symbol">
-            ☾
-          </span>
+            <div class="memory-front">
+              <span class="memory-number">02</span>
+              <span class="memory-big">☁</span>
+              <span class="memory-label">something else</span>
+              <span class="memory-tap">tap to open</span>
+            </div>
 
-          <span class="memory-text">
-            You make people comfortable just being themselves.
-          </span>
+            <div class="memory-back">
+              <span class="memory-number">02</span>
+              <p>
+                You make normal conversations somehow feel worth remembering.
+              </p>
+              <span class="memory-heart">♡</span>
+            </div>
 
-          <span class="memory-hint">
-            tap to read
-          </span>
+          </div>
 
         </button>
 
 
-        <button
-          class="memory-card"
-          type="button"
-        >
+        <button class="memory-card" type="button">
 
-          <span class="memory-number">
-            04
-          </span>
+          <div class="memory-inner">
 
-          <span class="memory-symbol">
-            ❀
-          </span>
+            <div class="memory-front">
+              <span class="memory-number">03</span>
+              <span class="memory-big">✧</span>
+              <span class="memory-label">this one matters</span>
+              <span class="memory-tap">tap to open</span>
+            </div>
 
-          <span class="memory-text">
-            Honestly, I just like having you around.
-          </span>
+            <div class="memory-back">
+              <span class="memory-number">03</span>
+              <p>
+                There are little things you do that stay in my head longer than they should.
+              </p>
+              <span class="memory-heart">♡</span>
+            </div>
 
-          <span class="memory-hint">
-            tap to read
-          </span>
+          </div>
+
+        </button>
+
+
+        <button class="memory-card" type="button">
+
+          <div class="memory-inner">
+
+            <div class="memory-front">
+              <span class="memory-number">04</span>
+              <span class="memory-big">♡</span>
+              <span class="memory-label">honestly...</span>
+              <span class="memory-tap">tap to open</span>
+            </div>
+
+            <div class="memory-back">
+              <span class="memory-number">04</span>
+              <p>
+                You made me feel something I hadn't really felt with someone before.
+              </p>
+              <span class="memory-heart">♡</span>
+            </div>
+
+          </div>
+
+        </button>
+
+
+        <button class="memory-card" type="button">
+
+          <div class="memory-inner">
+
+            <div class="memory-front">
+              <span class="memory-number">05</span>
+              <span class="memory-big">☾</span>
+              <span class="memory-label">small detail</span>
+              <span class="memory-tap">tap to open</span>
+            </div>
+
+            <div class="memory-back">
+              <span class="memory-number">05</span>
+              <p>
+                You have a way of making people feel comfortable being themselves.
+              </p>
+              <span class="memory-heart">♡</span>
+            </div>
+
+          </div>
+
+        </button>
+
+
+        <button class="memory-card" type="button">
+
+          <div class="memory-inner">
+
+            <div class="memory-front">
+              <span class="memory-number">06</span>
+              <span class="memory-big">❀</span>
+              <span class="memory-label">last one...</span>
+              <span class="memory-tap">tap to open</span>
+            </div>
+
+            <div class="memory-back">
+              <span class="memory-number">06</span>
+              <p>
+                And honestly, I like having you around more than I know how to explain.
+              </p>
+              <span class="memory-heart">♡</span>
+            </div>
+
+          </div>
 
         </button>
 
       </div>
 
 
-      <button
-        class="primary-btn"
-        id="askBtn"
-        type="button"
-      >
+      <div id="secretMessage" class="secret-message">
 
-        <span>
-          there's something I want to ask you
-        </span>
+        <span>you found something</span>
 
-        <span class="arrow">
-          →
-        </span>
+        <strong>
+          you're really easy to like.
+        </strong>
 
+      </div>
+
+
+      <button class="primary-btn" id="askBtn" type="button">
+        there's something I want to ask you
+        <span class="arrow">→</span>
       </button>
 
     </section>
 
 
-    <!-- ======================================
-         LOADING / SUSPENSE
-    ======================================= -->
+    <!-- ================= LOADING ================= -->
 
-    <section
-      class="screen"
-      id="loading"
-    >
+    <section class="screen" id="loading">
 
       <div class="loading-orbit">
+
+        <div class="orbit-ring ring-one"></div>
+        <div class="orbit-ring ring-two"></div>
 
         <div class="orbit-dot one"></div>
         <div class="orbit-dot two"></div>
@@ -392,133 +337,76 @@
 
       </div>
 
-
       <div class="eyebrow">
         one second
       </div>
 
-
-      <h2
-        class="section-title"
-        id="loadingTitle"
-      >
+      <h2 class="section-title" id="loadingTitle">
         collecting courage...
       </h2>
 
-
-      <p
-        class="loading-copy"
-        id="loadingCopy"
-      >
+      <p class="loading-copy" id="loadingCopy">
         this suddenly feels very real.
       </p>
 
-
       <div class="progress-shell">
-
-        <div
-          class="progress-bar"
-          id="progressBar"
-        ></div>
-
+        <div class="progress-bar" id="progressBar"></div>
       </div>
 
-
-      <div
-        class="loading-percent"
-        id="loadingPercent"
-      >
+      <div class="loading-percent" id="loadingPercent">
         0%
       </div>
 
     </section>
 
 
-    <!-- ======================================
-         PROPOSAL
-    ======================================= -->
+    <!-- ================= PROPOSAL ================= -->
 
-    <section
-      class="screen proposal-screen"
-      id="proposal"
-    >
+    <section class="screen proposal-screen" id="proposal">
 
       <div class="sparkle-line">
         ✦　✧　♡　✧　✦
       </div>
 
-
       <div class="proposal-badge">
         one last thing
       </div>
 
-
       <h2 class="proposal-title">
-
         Okay...
-
-        <span>
-          I really want to ask you this.
-        </span>
-
+        <span>I really want to ask you this.</span>
       </h2>
-
 
       <p class="proposal-question">
         Will you be my girlfriend?
       </p>
 
-
       <p class="proposal-sub">
-        No pressure. Just one very nervous person
-        asking another very lovely person.
+        One nervous person asking one very lovely person.
       </p>
-
 
       <div class="proposal-buttons">
 
-        <button
-          class="yes-btn"
-          id="yesBtn"
-          type="button"
-        >
+        <button class="yes-btn" id="yesBtn" type="button">
           yes, I'd love to ♡
         </button>
 
-
-        <button
-          class="no-btn"
-          id="noBtn"
-          type="button"
-        >
+        <button class="no-btn" id="noBtn" type="button">
           no
         </button>
 
       </div>
 
-
-      <p
-        class="beg-text"
-        id="begText"
-      ></p>
+      <p class="beg-text" id="begText"></p>
 
     </section>
 
 
-    <!-- ======================================
-         SUCCESS
-    ======================================= -->
+    <!-- ================= SUCCESS ================= -->
 
-    <section
-      class="screen success-screen"
-      id="success"
-    >
+    <section class="screen success-screen" id="success">
 
-      <div
-        class="confetti-layer"
-        id="confettiLayer"
-      ></div>
-
+      <div class="confetti-layer" id="confettiLayer"></div>
 
       <div class="success-orbit">
 
@@ -528,40 +416,24 @@
 
       </div>
 
-
       <div class="eyebrow">
         okay wow
       </div>
 
-
       <h2 class="success-title">
-
         You said yes.
-
-        <span>
-          That makes me very, very happy.
-        </span>
-
+        <span>That makes me very, very happy.</span>
       </h2>
 
-
       <p class="success-copy">
-
-        I was prepared to be nervous for
-        approximately forever, so this outcome
-        is a pretty nice surprise.
-
+        I was prepared to be nervous for approximately forever,
+        so this outcome is a pretty nice surprise.
       </p>
 
-
       <div class="status-pill">
-
         <span class="status-dot"></span>
-
         officially us ✨
-
       </div>
-
 
       <p class="tiny-note">
         thank you for choosing me.
@@ -572,22 +444,10 @@
   </main>
 
 
-  <!-- OPTIONAL MUSIC
-       Just upload song.mp3
-       next to these files.
-  -->
+  <!-- OPTIONAL MUSIC -->
 
-  <audio
-    id="bgMusic"
-    loop
-    preload="none"
-  >
-
-    <source
-      src="song.mp3"
-      type="audio/mpeg"
-    >
-
+  <audio id="bgMusic" loop preload="none">
+    <source src="song.mp3" type="audio/mpeg">
   </audio>
 
 
