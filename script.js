@@ -1,169 +1,183 @@
-/* =========================================================
-   DREAMY PROPOSAL SITE - INTERACTION CONTROLLER
-   ========================================================= */
+/* =========================================
+   NAVIGATION
+========================================= */
 
-const screens = [...document.querySelectorAll(".screen")];
+const screens = [
+  ...document.querySelectorAll(".screen")
+];
 
-/* maps each screen id to a step in the progress dots
-   ("loading" shares the same step as "proposal" since
-   it's just the suspense on the way there) */
-const stepMap = {
-  intro: 0,
-  choice: 1,
-  cards: 2,
-  loading: 3,
-  proposal: 3,
-  success: 4
-};
 
-const dots = [...document.querySelectorAll(".progress-dots .dot")];
+function showScreen(id){
 
-function updateDots(id) {
-  const step = stepMap[id] ?? 0;
-
-  dots.forEach((dot, i) => {
-    dot.classList.remove("active", "done");
-
-    if (i < step) {
-      dot.classList.add("done");
-    } else if (i === step) {
-      dot.classList.add("active");
-    }
-  });
-}
-
-function showScreen(id) {
   screens.forEach(screen => {
     screen.classList.remove("active");
   });
 
-  const target = document.getElementById(id);
 
-  if (target) {
+  const target =
+    document.getElementById(id);
+
+
+  if(target){
     target.classList.add("active");
   }
 
-  updateDots(id);
 
   window.scrollTo({
-    top: 0,
-    behavior: "smooth"
+    top:0,
+    behavior:"smooth"
   });
 
   createSparkles();
 }
 
 
-/* =========================================================
+/* =========================================
    MUSIC
-   ========================================================= */
+========================================= */
 
-const music = document.getElementById("bgMusic");
-const musicToggle = document.getElementById("musicToggle");
+const music =
+  document.getElementById("bgMusic");
+
+const musicToggle =
+  document.getElementById("musicToggle");
 
 let musicAvailable = true;
 
-if (music) {
-  music.addEventListener("error", () => {
-    musicAvailable = false;
 
-    if (musicToggle) {
+if(music){
+
+  music.addEventListener(
+    "error",
+    () => {
+
+      musicAvailable = false;
+
       musicToggle.classList.add("hidden");
-    }
-  });
 
-  music.addEventListener("canplay", () => {
-    if (musicAvailable && musicToggle) {
-      musicToggle.classList.remove("hidden");
     }
-  });
+  );
+
+
+  music.addEventListener(
+    "canplay",
+    () => {
+
+      if(musicAvailable){
+
+        musicToggle.classList.remove(
+          "hidden"
+        );
+
+      }
+
+    }
+  );
+
 }
 
-function tryStartMusic() {
-  if (!musicAvailable || !music) return;
 
-  music.volume = 0.35;
+function tryStartMusic(){
+
+  if(
+    !musicAvailable ||
+    !music
+  ){
+    return;
+  }
+
+
+  music.volume = .35;
+
 
   music.play()
+
     .then(() => {
-      if (musicToggle) {
-        musicToggle.classList.remove("hidden");
 
-        const label =
-          musicToggle.querySelector(".music-label");
+      musicToggle.classList.remove(
+        "hidden"
+      );
 
-        if (label) {
-          label.textContent = "music on ♫";
-        }
-      }
+      musicToggle
+        .querySelector(".music-label")
+        .textContent =
+        "music on ♫";
+
     })
+
     .catch(() => {});
+
 }
 
-if (musicToggle) {
-  musicToggle.addEventListener("click", () => {
 
-    if (!musicAvailable || !music) return;
+musicToggle.addEventListener(
+  "click",
+  () => {
 
-    if (music.paused) {
+    if(
+      !musicAvailable ||
+      !music
+    ){
+      return;
+    }
+
+
+    if(music.paused){
 
       music.play()
         .then(() => {
 
-          const label =
-            musicToggle.querySelector(".music-label");
-
-          if (label) {
-            label.textContent = "music on ♫";
-          }
+          musicToggle
+            .querySelector(".music-label")
+            .textContent =
+            "music on ♫";
 
         })
         .catch(() => {});
 
-    } else {
+    }
+
+    else{
 
       music.pause();
 
-      const label =
-        musicToggle.querySelector(".music-label");
-
-      if (label) {
-        label.textContent = "music off";
-      }
+      musicToggle
+        .querySelector(".music-label")
+        .textContent =
+        "music off";
 
     }
 
-  });
-}
+  }
+);
 
 
-/* =========================================================
+/* =========================================
    INTRO
-   ========================================================= */
+========================================= */
 
-const startBtn =
-  document.getElementById("startBtn");
+document
+  .getElementById("startBtn")
+  .addEventListener(
+    "click",
+    () => {
 
-if (startBtn) {
+      tryStartMusic();
 
-  startBtn.addEventListener("click", () => {
+      createBurst();
 
-    tryStartMusic();
+      setTimeout(
+        () => showScreen("choice"),
+        250
+      );
 
-    createBurst();
-
-    setTimeout(() => {
-      showScreen("choice");
-    }, 250);
-
-  });
-
-}
+    }
+  );
 
 
-/* =========================================================
-   CHOICE SCREEN
-   ========================================================= */
+/* =========================================
+   CHOICE
+========================================= */
 
 const revealMessages = {
 
@@ -181,342 +195,396 @@ const revealMessages = {
 
 };
 
+
 const choiceCards =
-  document.querySelectorAll(".choice-card");
+  document.querySelectorAll(
+    ".choice-card"
+  );
+
 
 choiceCards.forEach(card => {
 
-  card.addEventListener("click", () => {
+  card.addEventListener(
+    "click",
+    () => {
 
-    const choice = card.dataset.choice;
+      choiceCards.forEach(c => {
+        c.classList.remove("selected");
+      });
 
-    choiceCards.forEach(c => {
-      c.classList.remove("selected");
-    });
 
-    card.classList.add("selected");
+      card.classList.add("selected");
 
-    const revealArea =
-      document.getElementById("revealArea");
 
-    const revealText =
-      document.getElementById("revealText");
+      const choice =
+        card.dataset.choice;
 
-    if (revealText) {
-      revealText.textContent =
+
+      document
+        .getElementById("revealText")
+        .textContent =
         revealMessages[choice];
+
+
+      const revealArea =
+        document.getElementById(
+          "revealArea"
+        );
+
+
+      revealArea.classList.remove(
+        "hidden"
+      );
+
+
+      setTimeout(
+        () => {
+
+          revealArea.scrollIntoView({
+            behavior:"smooth",
+            block:"center"
+          });
+
+        },
+        100
+      );
+
+
+      createBurst();
+
     }
-
-    if (revealArea) {
-
-      revealArea.classList.remove("hidden");
-
-      revealArea.classList.add("revealing");
-
-      setTimeout(() => {
-
-        revealArea.scrollIntoView({
-          behavior: "smooth",
-          block: "center"
-        });
-
-      }, 150);
-
-    }
-
-    createBurst();
-
-  });
+  );
 
 });
 
 
-const choiceContinue =
-  document.getElementById("choiceContinue");
+document
+  .getElementById("choiceContinue")
+  .addEventListener(
+    "click",
+    () => {
 
-if (choiceContinue) {
+      showScreen("cards");
 
-  choiceContinue.addEventListener("click", () => {
-
-    showScreen("cards");
-
-  });
-
-}
+    }
+  );
 
 
-/* =========================================================
-   MEMORY CARDS
-   ========================================================= */
+/* =========================================
+   REAL FLIP CARDS
+========================================= */
 
 const memoryCards =
-  document.querySelectorAll(".memory-card");
+  document.querySelectorAll(
+    ".memory-card"
+  );
 
-memoryCards.forEach((card, index) => {
 
-  card.addEventListener("click", () => {
+memoryCards.forEach(card => {
 
-    card.classList.toggle("flipped");
+  card.addEventListener(
+    "click",
+    () => {
 
-    const hint =
-      card.querySelector(".memory-hint");
+      card.classList.toggle(
+        "flipped"
+      );
 
-    if (hint) {
 
-      if (card.classList.contains("flipped")) {
-        hint.textContent = "keep this one ♡";
-      } else {
-        hint.textContent = "tap to read";
+      createBurst();
+
+
+      const opened =
+        document.querySelectorAll(
+          ".memory-card.flipped"
+        );
+
+
+      if(opened.length >= 3){
+
+        unlockSecret();
+
       }
 
     }
-
-    createBurst();
-
-    /*
-      Small surprise:
-      once most cards are opened,
-      reveal a hidden bonus message.
-    */
-
-    const flipped =
-      document.querySelectorAll(".memory-card.flipped");
-
-    if (flipped.length === memoryCards.length - 1) {
-      unlockSecretMessage();
-    }
-
-  });
+  );
 
 });
 
 
-function unlockSecretMessage() {
+function unlockSecret(){
 
-  if (document.getElementById("secretMessage")) {
+  const secret =
+    document.getElementById(
+      "secretMessage"
+    );
+
+
+  if(
+    secret.classList.contains("show")
+  ){
     return;
   }
 
-  const message =
-    document.createElement("div");
 
-  message.id = "secretMessage";
+  secret.classList.add("show");
 
-  message.innerHTML = `
-    <div class="secret-glow"></div>
-    <span>one more thing...</span>
-    <strong>you're really easy to like.</strong>
-  `;
+  createMassiveBurst();
 
-  document
-    .getElementById("cards")
-    .appendChild(message);
-
-  setTimeout(() => {
-    message.classList.add("show");
-  }, 100);
-
-  createBurst();
 }
 
 
-/* =========================================================
-   LOADING / SUSPENSE
-   ========================================================= */
+/* =========================================
+   SLOW SUSPENSE LOADING
+========================================= */
 
 const loadingSteps = [
 
   {
-    title: "okay...",
-    copy: "this suddenly feels a little more real."
+    title:"okay...",
+    copy:"this suddenly feels a little more real."
   },
 
   {
-    title: "don't panic.",
-    copy: "I'm definitely not panicking."
+    title:"don't panic.",
+    copy:"I'm definitely not panicking."
   },
 
   {
-    title: "taking a breath...",
-    copy: "one second. I want to ask this properly."
+    title:"actually...",
+    copy:"I might be panicking a little."
   },
 
   {
-    title: "almost there...",
-    copy: "please be patient with my nervousness."
+    title:"taking a breath...",
+    copy:"one second. I want to ask this properly."
   },
 
   {
-    title: "okay.",
-    copy: "I think I'm ready."
+    title:"thinking...",
+    copy:"about how to say this without making it weird."
+  },
+
+  {
+    title:"almost there...",
+    copy:"please be patient with my nervousness."
+  },
+
+  {
+    title:"okay.",
+    copy:"I think I'm ready."
   }
 
 ];
 
 
-const askBtn =
-  document.getElementById("askBtn");
-
-if (askBtn) {
-
-  askBtn.addEventListener("click", startSuspense);
-
-}
+document
+  .getElementById("askBtn")
+  .addEventListener(
+    "click",
+    startSuspense
+  );
 
 
-function startSuspense() {
+function startSuspense(){
 
   showScreen("loading");
 
+
   const title =
-    document.getElementById("loadingTitle");
+    document.getElementById(
+      "loadingTitle"
+    );
+
 
   const copy =
-    document.getElementById("loadingCopy");
+    document.getElementById(
+      "loadingCopy"
+    );
+
 
   const bar =
-    document.getElementById("progressBar");
+    document.getElementById(
+      "progressBar"
+    );
+
 
   const percent =
-    document.getElementById("loadingPercent");
+    document.getElementById(
+      "loadingPercent"
+    );
 
-  /*
-    Deliberately unhurried, but not endless:
-    around 12-14 seconds total.
-  */
 
   let step = 0;
 
-  const stepDuration = 2400;
 
-  function showStep() {
+  function showStep(){
 
-    if (step >= loadingSteps.length) {
+    if(
+      step >=
+      loadingSteps.length
+    ){
 
       finishSuspense();
 
       return;
+
     }
+
 
     const current =
       loadingSteps[step];
 
-    if (title) {
-      title.style.opacity = "0";
-    }
 
-    if (copy) {
-      copy.style.opacity = "0";
-    }
+    title.style.opacity = "0";
+    copy.style.opacity = "0";
 
-    setTimeout(() => {
 
-      if (title) {
+    setTimeout(
+      () => {
+
         title.textContent =
           current.title;
 
-        title.style.opacity = "1";
-      }
-
-      if (copy) {
         copy.textContent =
           current.copy;
 
+
+        title.style.opacity = "1";
         copy.style.opacity = "1";
-      }
 
-    }, 250);
+      },
+      250
+    );
 
-    const nextProgress =
+
+    const progress =
       Math.round(
+
         ((step + 1) /
-          loadingSteps.length) *
-          94
+          loadingSteps.length)
+        * 94
+
       );
 
-    if (bar) {
-      bar.style.width =
-        `${nextProgress}%`;
-    }
 
-    if (percent) {
-      percent.textContent =
-        `${nextProgress}%`;
-    }
+    bar.style.width =
+      `${progress}%`;
+
+
+    percent.textContent =
+      `${progress}%`;
+
 
     createTinySparkle();
 
+
     step++;
 
-    setTimeout(showStep, stepDuration);
+
+    /*
+      Each message stays for
+      3.4 seconds so there is
+      actually time to read it.
+    */
+
+    setTimeout(
+      showStep,
+      3400
+    );
 
   }
+
 
   showStep();
 
 }
 
 
-function finishSuspense() {
+function finishSuspense(){
 
   const title =
-    document.getElementById("loadingTitle");
+    document.getElementById(
+      "loadingTitle"
+    );
+
 
   const copy =
-    document.getElementById("loadingCopy");
+    document.getElementById(
+      "loadingCopy"
+    );
+
 
   const bar =
-    document.getElementById("progressBar");
+    document.getElementById(
+      "progressBar"
+    );
+
 
   const percent =
-    document.getElementById("loadingPercent");
+    document.getElementById(
+      "loadingPercent"
+    );
 
-  if (title) {
-    title.textContent = "one last thing...";
-  }
 
-  if (copy) {
-    copy.textContent =
-      "okay. here we go.";
-  }
+  title.textContent =
+    "one last thing...";
 
-  if (bar) {
-    bar.style.width = "100%";
-  }
 
-  if (percent) {
-    percent.textContent = "100%";
-  }
+  copy.textContent =
+    "okay. here we go.";
+
+
+  bar.style.width =
+    "100%";
+
+
+  percent.textContent =
+    "100%";
+
 
   /*
-    Hold the final suspense
-    before showing the question.
+    Pause after 100%.
+    This is the suspense moment.
   */
 
-  setTimeout(() => {
+  setTimeout(
+    () => {
 
-    createMassiveBurst();
+      createMassiveBurst();
 
-    setTimeout(() => {
 
-      showScreen("proposal");
+      setTimeout(
+        () => {
 
-    }, 1200);
+          showScreen("proposal");
 
-  }, 2000);
+        },
+        1200
+      );
+
+    },
+    2600
+  );
 
 }
 
 
-/* =========================================================
-   PROPOSAL
-   ========================================================= */
+/* =========================================
+   NO BUTTON
+========================================= */
 
 const noBtn =
-  document.getElementById("noBtn");
+  document.getElementById(
+    "noBtn"
+  );
+
 
 const begText =
-  document.getElementById("begText");
+  document.getElementById(
+    "begText"
+  );
+
 
 const noMessages = [
 
@@ -530,7 +598,7 @@ const noMessages = [
 
   "okay okay... one more try?",
 
-  "that button is suspiciously hard to catch.",
+  "that button is suspiciously difficult to click.",
 
   "I'm choosing to believe that was an accident.",
 
@@ -540,107 +608,108 @@ const noMessages = [
 
 ];
 
+
 let noCount = 0;
 
-if (noBtn) {
 
-  noBtn.addEventListener(
-    "mouseenter",
-    dodgeNoButton
-  );
-
-  noBtn.addEventListener(
-    "click",
-    dodgeNoButton
-  );
-
-}
-
-
-function dodgeNoButton() {
+function moveNoButton(){
 
   noCount++;
 
-  if (begText) {
 
-    begText.textContent =
-      noMessages[
-        (noCount - 1) %
-        noMessages.length
-      ];
+  begText.textContent =
+    noMessages[
+      (noCount - 1) %
+      noMessages.length
+    ];
+
+
+  if(
+    window.innerWidth < 600
+  ){
+
+    const x =
+      Math.random() * 120 - 60;
+
+
+    const y =
+      Math.random() * 80 - 40;
+
+
+    noBtn.style.transform =
+      `translate(${x}px,${y}px)`;
 
   }
 
-
-  if (window.innerWidth < 600) {
-
-    const x =
-      (Math.random() * 120) - 60;
-
-    const y =
-      (Math.random() * 80) - 40;
-
-    noBtn.style.transform =
-      `translate(${x}px, ${y}px)`;
-
-  } else {
+  else{
 
     const x =
-      (Math.random() * 280) - 140;
+      Math.random() * 280 - 140;
+
 
     const y =
-      (Math.random() * 120) - 60;
+      Math.random() * 120 - 60;
+
 
     noBtn.style.transform =
-      `translate(${x}px, ${y}px)`;
+      `translate(${x}px,${y}px)`;
 
   }
+
 
   createTinySparkle();
 
 }
 
 
-/* =========================================================
+noBtn.addEventListener(
+  "mouseenter",
+  moveNoButton
+);
+
+
+noBtn.addEventListener(
+  "click",
+  moveNoButton
+);
+
+
+/* =========================================
    YES
-   ========================================================= */
+========================================= */
 
-const yesBtn =
-  document.getElementById("yesBtn");
+document
+  .getElementById("yesBtn")
+  .addEventListener(
+    "click",
+    () => {
 
-if (yesBtn) {
+      tryStartMusic();
 
-  yesBtn.addEventListener("click", () => {
+      createMassiveBurst();
 
-    tryStartMusic();
+      showScreen("success");
 
-    createMassiveBurst();
+      startCelebration();
 
-    showScreen("success");
-
-    startCelebration();
-
-  });
-
-}
+    }
+  );
 
 
-/* =========================================================
-   CELEBRATION
-   ========================================================= */
+/* =========================================
+   CONFETTI
+========================================= */
 
-function startCelebration() {
+function startCelebration(){
 
   const layer =
     document.getElementById(
       "confettiLayer"
     );
 
-  if (!layer) {
-    return;
-  }
 
   layer.innerHTML = "";
+
 
   const symbols = [
     "♡",
@@ -651,25 +720,31 @@ function startCelebration() {
     "·"
   ];
 
+
   const colors = [
     "#d979a5",
-    "#e4a7c1",
-    "#b58aa7",
-    "#d5b4c9",
-    "#c96d97"
+    "#9a87be",
+    "#87a5bf",
+    "#d3aa67",
+    "#c97699"
   ];
 
-  for (
+
+  for(
     let i = 0;
-    i < 90;
+    i < 100;
     i++
-  ) {
+  ){
 
     const piece =
-      document.createElement("span");
+      document.createElement(
+        "span"
+      );
+
 
     piece.className =
       "confetti";
+
 
     piece.textContent =
       symbols[
@@ -679,8 +754,10 @@ function startCelebration() {
         )
       ];
 
+
     piece.style.left =
       `${Math.random() * 100}%`;
+
 
     piece.style.color =
       colors[
@@ -690,208 +767,219 @@ function startCelebration() {
         )
       ];
 
+
     piece.style.fontSize =
       `${10 + Math.random() * 18}px`;
 
+
     piece.style.animationDelay =
-      `${Math.random() * 1.7}s`;
+      `${Math.random() * 1.5}s`;
+
 
     piece.style.animationDuration =
       `${3 + Math.random() * 2.5}s`;
 
-    layer.appendChild(piece);
+
+    layer.appendChild(
+      piece
+    );
 
   }
 
 }
 
 
-/* =========================================================
-   PARTICLES / SPARKLES
-   ========================================================= */
+/* =========================================
+   SPARKLES
+========================================= */
 
-function createSparkles() {
-
-  for (let i = 0; i < 5; i++) {
-    createTinySparkle();
-  }
-
-}
-
-
-function createTinySparkle() {
+function createTinySparkle(){
 
   const sparkle =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
+
 
   sparkle.className =
     "floating-sparkle";
 
+
   sparkle.textContent =
-    Math.random() > 0.5
+    Math.random() > .5
       ? "✦"
       : "♡";
+
 
   sparkle.style.left =
     `${20 + Math.random() * 60}%`;
 
+
   sparkle.style.top =
     `${25 + Math.random() * 50}%`;
 
-  sparkle.style.animationDuration =
-    `${2 + Math.random() * 2}s`;
 
   document.body.appendChild(
     sparkle
   );
 
-  setTimeout(() => {
-    sparkle.remove();
-  }, 4000);
+
+  setTimeout(
+    () => sparkle.remove(),
+    3000
+  );
 
 }
 
 
-function createBurst() {
+function createSparkles(){
 
-  for (let i = 0; i < 12; i++) {
+  for(
+    let i = 0;
+    i < 6;
+    i++
+  ){
 
-    setTimeout(() => {
-
-      createTinySparkle();
-
-    }, i * 35);
+    setTimeout(
+      createTinySparkle,
+      i * 100
+    );
 
   }
 
 }
 
 
-function createMassiveBurst() {
+function createBurst(){
 
-  for (let i = 0; i < 50; i++) {
+  for(
+    let i = 0;
+    i < 12;
+    i++
+  ){
 
-    setTimeout(() => {
-
-      createTinySparkle();
-
-    }, i * 30);
+    setTimeout(
+      createTinySparkle,
+      i * 35
+    );
 
   }
 
 }
 
 
-/* =========================================================
-   CURSOR HEART TRAIL
-   (a light, occasional trail — not on every pixel moved)
-   ========================================================= */
+function createMassiveBurst(){
 
-let lastHeartTime = 0;
+  for(
+    let i = 0;
+    i < 55;
+    i++
+  ){
 
-document.addEventListener("mousemove", (e) => {
+    setTimeout(
+      createTinySparkle,
+      i * 25
+    );
 
-  const now = Date.now();
-
-  if (now - lastHeartTime < 140) {
-    return;
   }
 
-  lastHeartTime = now;
-
-  const heart =
-    document.createElement("div");
-
-  heart.className = "cursor-heart";
-
-  heart.textContent = "♡";
-
-  heart.style.left = `${e.clientX}px`;
-  heart.style.top = `${e.clientY}px`;
-
-  document.body.appendChild(heart);
-
-  setTimeout(() => {
-    heart.remove();
-  }, 900);
-
-});
+}
 
 
-/* =========================================================
-   LITTLE EASTER EGG
-   ========================================================= */
-
-/*
-   Click the moon three times.
-*/
+/* =========================================
+   MOON EASTER EGG
+========================================= */
 
 const moon =
   document.querySelector(".moon");
 
+
 let moonClicks = 0;
 
-if (moon) {
 
-  moon.addEventListener("click", () => {
+moon.addEventListener(
+  "click",
+  () => {
 
     moonClicks++;
 
-    if (moonClicks === 3) {
+
+    if(moonClicks === 3){
 
       moonClicks = 0;
 
+
       const note =
-        document.createElement("div");
+        document.createElement(
+          "div"
+        );
+
 
       note.className =
         "moon-secret";
+
 
       note.innerHTML = `
         <span>you found the secret 🌙</span>
         <strong>okay, you're cute too.</strong>
       `;
 
+
       document.body.appendChild(
         note
       );
 
-      setTimeout(() => {
-        note.classList.add("show");
-      }, 50);
+
+      setTimeout(
+        () => {
+
+          note.classList.add(
+            "show"
+          );
+
+        },
+        50
+      );
+
 
       createMassiveBurst();
 
-      setTimeout(() => {
 
-        note.classList.remove("show");
+      setTimeout(
+        () => {
 
-        setTimeout(() => {
-          note.remove();
-        }, 500);
+          note.classList.remove(
+            "show"
+          );
 
-      }, 3500);
+
+          setTimeout(
+            () => note.remove(),
+            500
+          );
+
+        },
+        3500
+      );
 
     }
 
-  });
+  }
+);
 
-}
 
-
-/* =========================================================
-   INITIAL ATMOSPHERE
-   ========================================================= */
+/* =========================================
+   STARTING ATMOSPHERE
+========================================= */
 
 window.addEventListener(
   "load",
   () => {
 
-    updateDots("intro");
-
-    setTimeout(() => {
-      createSparkles();
-    }, 600);
+    setTimeout(
+      createSparkles,
+      500
+    );
 
   }
 );
