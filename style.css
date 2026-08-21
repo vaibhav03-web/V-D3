@@ -195,6 +195,85 @@ button:focus-visible{
 
 
 /* =========================
+   PROGRESS DOTS
+   ========================= */
+
+.progress-dots{
+
+  position:fixed;
+
+  top:18px;
+  left:50%;
+
+  transform:translateX(-50%);
+
+  z-index:20;
+
+  display:flex;
+
+  align-items:center;
+
+  gap:9px;
+
+  padding:9px 14px;
+
+  border:
+    1px solid
+    rgba(128,87,115,.11);
+
+  border-radius:999px;
+
+  background:
+    rgba(255,255,255,.65);
+
+  backdrop-filter:blur(18px);
+
+  box-shadow:
+    0 10px 25px
+    rgba(103,67,96,.06);
+}
+
+.progress-dots .dot{
+
+  width:6px;
+  height:6px;
+
+  border-radius:50%;
+
+  background:#e6cddc;
+
+  transition:.4s ease;
+}
+
+.progress-dots .dot.active{
+
+  width:20px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #db7aa7,
+      #bf5d8c
+    );
+}
+
+.progress-dots .dot.done{
+  background:#d9a9c1;
+}
+
+@media(max-width:560px){
+
+  .progress-dots{
+    top:10px;
+
+    padding:7px 11px;
+
+    gap:7px;
+  }
+}
+
+
+/* =========================
    APP
    ========================= */
 
@@ -354,6 +433,40 @@ button:focus-visible{
   font-size:.68em;
 }
 
+.hero-title span.shimmer{
+
+  background:
+    linear-gradient(
+      100deg,
+      var(--rose-dark) 30%,
+      #f0a6c8 45%,
+      var(--rose-dark) 60%
+    );
+
+  background-size:250% 100%;
+
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+
+  animation:
+    shimmerText
+    4.5s
+    ease-in-out
+    infinite;
+}
+
+@keyframes shimmerText{
+
+  0%{
+    background-position:200% 0;
+  }
+
+  100%{
+    background-position:-50% 0;
+  }
+}
+
 .hero-copy{
   margin-top:26px;
 
@@ -464,7 +577,30 @@ button:focus-visible{
     0 15px 32px
     rgba(188,84,133,.23);
 
-  transition:.28s ease;
+  transition:
+    transform .28s ease,
+    box-shadow .28s ease;
+
+  animation:
+    btnGlow
+    3.2s
+    ease-in-out
+    infinite;
+}
+
+@keyframes btnGlow{
+
+  0%,100%{
+    box-shadow:
+      0 15px 32px
+      rgba(188,84,133,.23);
+  }
+
+  50%{
+    box-shadow:
+      0 15px 38px
+      rgba(188,84,133,.4);
+  }
 }
 
 .primary-btn{
@@ -764,7 +900,7 @@ button:focus-visible{
 
 .memory-grid{
 
-  width:min(820px,100%);
+  width:min(600px,100%);
 
   margin-top:34px;
 
@@ -772,20 +908,20 @@ button:focus-visible{
 
   grid-template-columns:
     repeat(
-      3,
+      2,
       1fr
     );
 
-  gap:15px;
+  gap:16px;
 }
 
 .memory-card{
 
   position:relative;
 
-  min-height:215px;
+  min-height:190px;
 
-  padding:22px;
+  padding:24px;
 
   border:
     1px solid
@@ -843,6 +979,20 @@ button:focus-visible{
     rgba(98,64,92,.11);
 }
 
+.memory-card.flipped{
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,244,249,.95),
+      rgba(252,233,242,.85)
+    );
+
+  box-shadow:
+    0 16px 36px
+    rgba(98,64,92,.13);
+}
+
 .memory-number{
   color:#b0a0ad;
 
@@ -854,18 +1004,24 @@ button:focus-visible{
 .memory-symbol{
   display:block;
 
-  margin-top:18px;
+  margin-top:16px;
 
   color:#c66b97;
 
-  font-size:29px;
+  font-size:27px;
+
+  transition:transform .4s ease;
+}
+
+.memory-card.flipped .memory-symbol{
+  transform:scale(1.15) rotate(-8deg);
 }
 
 .memory-text{
 
   display:block;
 
-  margin-top:15px;
+  margin-top:14px;
 
   color:#534151;
 
@@ -874,17 +1030,17 @@ button:focus-visible{
     Georgia,
     serif;
 
-  font-size:25px;
+  font-size:23px;
 
-  line-height:1.04;
+  line-height:1.12;
 }
 
 .memory-hint{
 
   position:absolute;
 
-  left:22px;
-  bottom:17px;
+  left:24px;
+  bottom:18px;
 
   color:#ab9ca8;
 
@@ -1305,23 +1461,6 @@ button:focus-visible{
   cursor:pointer;
 }
 
-.yes-btn{
-
-  color:white;
-
-  background:
-    linear-gradient(
-      135deg,
-      #de7dab,
-      #c55f90
-    );
-
-  box-shadow:
-    0 16px 34px
-    rgba(191,88,136,.23);
-
-}
-
 .no-btn{
 
   color:#756673;
@@ -1615,6 +1754,48 @@ button:focus-visible{
 
 
 /* =========================
+   CURSOR HEARTS
+   ========================= */
+
+.cursor-heart{
+
+  position:fixed;
+
+  z-index:9;
+
+  color:rgba(216,115,162,.55);
+
+  pointer-events:none;
+
+  font-size:12px;
+
+  animation:
+    cursorHeartFloat
+    .9s
+    ease-out
+    forwards;
+}
+
+@keyframes cursorHeartFloat{
+
+  0%{
+    opacity:.8;
+    transform:
+      translate(0,0)
+      scale(.7);
+  }
+
+  100%{
+    opacity:0;
+    transform:
+      translate(-6px,-34px)
+      scale(1.1);
+  }
+
+}
+
+
+/* =========================
    CONFETTI
    ========================= */
 
@@ -1749,14 +1930,6 @@ button:focus-visible{
 
 @media(max-width:800px){
 
-  .memory-grid{
-    grid-template-columns:
-      repeat(
-        2,
-        1fr
-      );
-  }
-
   .screen{
     min-height:650px;
 
@@ -1784,13 +1957,29 @@ button:focus-visible{
     border-radius:24px;
   }
 
-  .choice-grid,
-  .memory-grid{
+  .choice-grid{
     grid-template-columns:1fr;
   }
 
+  .memory-grid{
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+  }
+
   .memory-card{
-    min-height:165px;
+    min-height:150px;
+
+    padding:16px;
+  }
+
+  .memory-symbol{
+    margin-top:10px;
+    font-size:22px;
+  }
+
+  .memory-text{
+    margin-top:10px;
+    font-size:18px;
   }
 
   .proposal-buttons{
@@ -1798,7 +1987,7 @@ button:focus-visible{
   }
 
   .music-toggle{
-    top:10px;
+    top:52px;
     right:10px;
   }
 
